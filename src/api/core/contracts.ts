@@ -30,6 +30,8 @@ export type Attributes = {
   parameter_metadata?: Record<string, Metadata>
   setup?: string
   notes?: string
+  mastercam_operation_id?: number
+  tool?: { station?: number; tool_number?: number }
   resources?: {
     id: string
     name: string
@@ -64,6 +66,7 @@ export type LivePlan = {
       execution_profile_digest?: string
       reference_only: boolean
       execution_ready: boolean
+      engineering_status?: string
       matching_evidence?: { step_sha256: string; report_sha256: string; mcam_sha256: string }
       source_unbound?: boolean
       parameter_rules?: {
