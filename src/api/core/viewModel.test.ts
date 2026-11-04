@@ -21,6 +21,46 @@ describe('固定Golden结果映射与版本约束', () => {
       input.payload.operations.find((op) => op.id === vm.operations[0]?.id)?.steps[0]?.id,
     )
   })
+  it('空参数规则仍只读展示已有刀具、进给幅值和主轴设定', () => {
+    const input = plan()
+    input.payload.extensions.parameter_rules = []
+    input.payload.extensions.engineering_status = 'pending'
+    const operation = input.payload.operations[0]!
+    operation.attributes.parameters = { feed: -0.15, rpm: 800, depth: 0.5, stock_x: 0.2 }
+    operation.attributes.tool = { station: 1, tool_number: 1 }
+    operation.steps[0]!.attributes = { mastercam_operation_id: 2 }
+    const vm = toProcessPlan(input, config())
+    expect(vm.engineeringStatus).toBe('pending')
+    expect(vm.parametersFrozen).toBe(true)
+    const shown = vm.operations[0]!
+    expect(shown.parameters.find((item) => item.id === 'feed')).toMatchObject({
+      name: '进给幅值',
+      value: 0.15,
+      editable: false,
+    })
+    expect(shown.parameters.find((item) => item.id === 'feed')?.description).toContain('-0.15')
+    expect(shown.parameters.find((item) => item.id === 'rpm')).toMatchObject({
+      name: '主轴设定',
+      value: 800,
+      unit: undefined,
+      editable: false,
+    })
+    expect(shown.parameters.find((item) => item.id === 'rpm')?.description).toContain('恒线速')
+    expect(shown.parameters.find((item) => item.id === 'depth')?.name).toBe('切深')
+    expect(shown.resources[0]).toMatchObject({ kind: 'tool', name: '刀号 1', status: 'pending' })
+    expect(shown.steps[0]?.parameters.map((item) => item.id)).toEqual([
+      'mastercam_operation_id',
+      'tool',
+      'feed',
+      'rpm',
+      'depth',
+      'stock_x',
+    ])
+    expect(shown.steps[0]?.parameters.find((item) => item.id === 'tool')?.value).toBe(
+      '刀号 1 / 刀位 1',
+    )
+    expect(shown.steps[0]?.parameters[0]?.value).toBe(2)
+  })
   it('只接受离散值，禁止0.45及未知来源编辑', () => {
     const input = plan(),
       vm = toProcessPlan(input, config())
