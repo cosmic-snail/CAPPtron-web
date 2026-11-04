@@ -18,6 +18,7 @@ export type CamRun = {
   current_candidate: NcRef | null
   allowed_actions: string[]
   error?: { code: number; message: string } | null
+  reset_required?: boolean
 }
 export type NcVersion = {
   ref: NcRef
@@ -172,6 +173,9 @@ export class CoreClient {
   }
   observe<T>(run: string) {
     return this.request<T>(`/cam/runs/${part(run)}/observe`, { method: 'POST' })
+  }
+  reconcile<T>(run: string) {
+    return this.request<T>(`/cam/runs/${part(run)}/reconcile`, { method: 'POST' })
   }
   async post<T>(path: string, body: Record<string, unknown>, reviewer?: string) {
     const { command_id: command, ...content } = body

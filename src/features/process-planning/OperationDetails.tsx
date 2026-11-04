@@ -66,7 +66,14 @@ export function OperationDetails({
           <>
             <section>
               <h4>装夹与定位</h4>
-              <p>{operation.setup ?? '暂无装夹与定位说明'}</p>
+              {operation.setupId && <p>装夹 {operation.setupId}</p>}
+              <p>
+                {operation.setup && operation.setup !== '未提供'
+                  ? operation.setup
+                  : operation.setupId
+                    ? '装夹说明未另行提供。'
+                    : '暂无装夹与定位说明'}
+              </p>
             </section>
             <section>
               <h4>加工内容 · {operation.steps.length} 个工步</h4>

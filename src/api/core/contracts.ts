@@ -29,8 +29,10 @@ export type Attributes = {
   parameters?: Record<string, unknown>
   parameter_metadata?: Record<string, Metadata>
   setup?: string
+  setup_id?: string
   notes?: string
   mastercam_operation_id?: number
+  native_operation_id?: number
   tool?: { station?: number; tool_number?: number }
   resources?: {
     id: string

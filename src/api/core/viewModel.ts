@@ -152,7 +152,7 @@ export function toProcessPlan(plan: LivePlan, deployment: Deployment): ProcessPl
         description,
       }
     })
-  const nativeParameter = (id: number): Parameter => ({
+  const nativeParameter = (id: number, source: string): Parameter => ({
     id: 'mastercam_operation_id',
     name: '原生工序 ID',
     value: id,
@@ -160,8 +160,21 @@ export function toProcessPlan(plan: LivePlan, deployment: Deployment): ProcessPl
     inputKind: 'number',
     source: 'upstream',
     status: 'provided',
-    description: 'Mastercam 工序 ID，来自工步属性。',
+    description: `Mastercam 工序 ID，来自工步属性 ${source}。`,
   })
+  const nativeIdentity = (attributes: Attributes | undefined) => {
+    const mastercam = attributes?.mastercam_operation_id
+    const native = attributes?.native_operation_id
+    const mastercamId =
+      typeof mastercam === 'number' && Number.isInteger(mastercam) ? mastercam : undefined
+    const nativeId = typeof native === 'number' && Number.isInteger(native) ? native : undefined
+    if (mastercamId != null && nativeId != null && mastercamId !== nativeId)
+      throw new Error('工步的 mastercam_operation_id 与 native_operation_id 不一致')
+    if (mastercamId != null) return nativeParameter(mastercamId, 'mastercam_operation_id')
+    if (nativeId != null) return nativeParameter(nativeId, 'native_operation_id')
+    return undefined
+  }
+  const setupText = (value: unknown) => (typeof value === 'string' ? value.trim() : '')
   const model: ProcessPlan = {
     id: plan.task_id,
     verifiedGeometry: ext.verified_part,
@@ -181,7 +194,8 @@ export function toProcessPlan(plan: LivePlan, deployment: Deployment): ProcessPl
       sequence: op.sequence,
       name: op.name,
       source: `Core · ${plan.result_id} / r${plan.revision}`,
-      setup: op.attributes.setup ?? '未提供',
+      setup: setupText(op.attributes.setup) || '未提供',
+      setupId: setupText(op.attributes.setup_id) || undefined,
       notes: op.attributes.notes ?? '未提供',
       parameters: parameters(op.attributes, op.id, true),
       onsiteMeasurements: [],
@@ -193,15 +207,13 @@ export function toProcessPlan(plan: LivePlan, deployment: Deployment): ProcessPl
       ],
       steps: ordered(op.steps).map((step) => {
         const own = parameters(step.attributes ?? {}, op.id, false)
-        const native = step.attributes?.mastercam_operation_id
+        const native = nativeIdentity(step.attributes)
         return {
           id: step.id,
           sequence: step.sequence,
           name: step.content,
           parameters: [
-            ...(typeof native === 'number' && Number.isInteger(native)
-              ? [nativeParameter(native)]
-              : []),
+            ...(native ? [native] : []),
             ...toolParameter(op.attributes.tool),
             ...(own.length ? own : parameters(op.attributes, op.id, false)),
           ],

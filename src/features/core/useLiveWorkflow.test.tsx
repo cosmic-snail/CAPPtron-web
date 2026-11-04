@@ -402,6 +402,68 @@ describe('CAM observe 与终态完成的竞态', () => {
     await waitFor(() => expect(hook.result.current.busy).toBe(false))
     return { ...hook, fetcher, camGets: () => camGets }
   }
+  it('未确认结果只恢复原运行，不新建 CAM', async () => {
+    const config = {
+      schema_version: 'frontend-integration.v1',
+      templates: [
+        {
+          template: fixture.deployment.template,
+          execution_profile_id: fixture.approved.execution_profile_id,
+          matching_evidence: fixture.plan.payload.extensions.matching_evidence,
+          operations: fixture.plan.payload.operations.map((op) => ({
+            ...op,
+            parameter_metadata:
+              'parameter_metadata' in op.attributes ? op.attributes.parameter_metadata : {},
+          })),
+          parameter_rules: fixture.plan.payload.extensions.parameter_rules,
+        },
+      ],
+    }
+    const bytes = new TextEncoder().encode(JSON.stringify(config))
+    const digest = Array.from(
+      new Uint8Array(await webcrypto.subtle.digest('SHA-256', bytes)),
+      (value) => value.toString(16).padStart(2, '0'),
+    ).join('')
+    vi.stubEnv('VITE_CORE_INTEGRATION_CONFIG_URL', '/config')
+    vi.stubEnv('VITE_CORE_INTEGRATION_CONFIG_SHA256', digest)
+    localStorage.setItem(
+      'capptron.core.workflow.v1.' + encodeURIComponent('|' + digest),
+      JSON.stringify({ task_id: fixture.task.task_id, cam_run_id: fixture.cam.cam_run_id }),
+    )
+    const fetcher = vi.fn(async (url: string, init?: RequestInit) => {
+      let value: unknown
+      if (url.endsWith('/reconcile')) value = { ...fixture.cam, status: 'succeeded' }
+      else if (url.endsWith('/cam/runs/cam-1'))
+        value = {
+          ...fixture.cam,
+          status: 'awaiting_confirmation',
+          current_candidate: null,
+          allowed_actions: ['reconcile', 'observe', 'cancel', 'closeout'],
+        }
+      else if (url.endsWith('/nc/versions/1')) value = fixture.nc
+      else if (url.includes('/file?'))
+        value = fixture.files.find(
+          (file) => file.file_id === new URL(url, 'http://core').searchParams.get('file_id'),
+        )
+      else if (url.endsWith('/feedback')) value = { feedback_version: 0, items: [] }
+      else if (url.includes('/cam/tasks/')) value = fixture.approved
+      else if (url.includes('/process-cards/')) value = fixture.card
+      else if (url.includes('/results/')) value = fixture.plan
+      else if (url.includes('/runs/')) value = fixture.run
+      else value = fixture.task
+      void init
+      return new Response(JSON.stringify(value))
+    })
+    vi.stubGlobal('fetch', fetcher)
+    const hook = renderHook(() => useLiveWorkflow())
+    await waitFor(() => expect(hook.result.current.plan?.revision).toBe(1))
+    await waitFor(() => expect(hook.result.current.busy).toBe(false))
+    act(() => hook.result.current.refreshCam())
+    await waitFor(() => expect(hook.result.current.nc?.ref).toEqual(fixture.nc.ref))
+    const writes = fetcher.mock.calls.filter(([, init]) => init?.method === 'POST')
+    expect(writes.map(([url]) => url)).toEqual(['/cam/runs/cam-1/reconcile'])
+    expect(hook.result.current.error).toBe('')
+  })
   it('409/8302后只回读同run终态并展示原NC，不重新启动CAM', async () => {
     const { result, fetcher, camGets } = await pollingCase(8302, 'succeeded')
     expect(result.current.error).toBe('')

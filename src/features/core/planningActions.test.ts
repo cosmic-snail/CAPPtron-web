@@ -56,6 +56,27 @@ describe('工艺操作原因', () => {
     expect(result.approveReason).toBe('')
     expect(result.runReason).toContain('批准')
   })
+  it('已确认失败且不需要复位时可以重新运行', () => {
+    const approved = {
+      ...base,
+      approved: {
+        execution_configured: true,
+        plans: [{ plan_ref: { task_id: 't', result_id: 'r', revision: 4 }, profile_matches: true }],
+      },
+      executable: { plan_ref: { task_id: 't', result_id: 'r', revision: 4 } },
+    }
+    expect(planningActions({ ...approved, cam: { status: 'failed' } }).runReason).toBe('')
+    expect(planningActions({ ...approved, cam: { status: 'cancelled' } }).runReason).toBe('')
+    expect(
+      planningActions({ ...approved, cam: { status: 'failed', reset_required: true } }).runReason,
+    ).toContain('已有 CAM')
+    expect(
+      planningActions({ ...approved, cam: { status: 'awaiting_confirmation' } }).runReason,
+    ).toContain('已有 CAM')
+    expect(planningActions({ ...approved, cam: { status: 'succeeded' } }).runReason).toContain(
+      '已有 CAM',
+    )
+  })
   it('未决请求和草稿有明确下一步', () => {
     expect(planningActions({ ...base, canRetry: true }).approveReason).toContain('继续查询')
     expect(planningActions({ ...base, dirty: true }).approveReason).toContain('提交修改')

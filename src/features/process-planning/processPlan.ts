@@ -41,6 +41,7 @@ export type ProcessOperation = {
   name: string
   source: string
   setup?: string
+  setupId?: string
   notes?: string
   steps: ProcessStep[]
   parameters: Parameter[]

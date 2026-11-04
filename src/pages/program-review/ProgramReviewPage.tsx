@@ -109,7 +109,8 @@ function LiveProgramReview({
                 </h3>
               </div>
               <p className="muted-text">
-                {nc.origin} · {file.encoding} / {file.newline} ·{' '}
+                {file.setup_id} · {file.encoding} / {file.newline} · {file.size_bytes} 字节 ·
+                SHA-256 {file.sha256} · {nc.origin} ·{' '}
                 {draft.changed ? '本地草稿 · 未提交服务端' : reviewStatus}
               </p>
             </div>
@@ -192,7 +193,7 @@ function LiveProgramReview({
               >
                 {live.files?.map((item) => (
                   <option key={item.file_id} value={item.file_id}>
-                    {item.filename}
+                    {item.setup_id} · {item.filename}
                   </option>
                 ))}
               </select>

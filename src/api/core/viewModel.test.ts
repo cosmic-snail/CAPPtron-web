@@ -60,6 +60,24 @@ describe('固定Golden结果映射与版本约束', () => {
       '刀号 1 / 刀位 1',
     )
     expect(shown.steps[0]?.parameters[0]?.value).toBe(2)
+    expect(shown.steps[0]?.parameters[0]?.description).toContain('mastercam_operation_id')
+  })
+  it('用 setup_id 和 native_operation_id 展示装夹与原生工序，不一致时拒绝', () => {
+    const input = plan()
+    const operation = input.payload.operations[0]!
+    operation.attributes.setup_id = 'inner-mouth'
+    operation.steps[0]!.attributes = { native_operation_id: 1 }
+    const shown = toProcessPlan(input, config()).operations[0]!
+    expect(shown.setup).toBe('未提供')
+    expect(shown.setupId).toBe('inner-mouth')
+    expect(shown.steps[0]?.parameters[0]).toMatchObject({
+      id: 'mastercam_operation_id',
+      name: '原生工序 ID',
+      value: 1,
+    })
+    expect(shown.steps[0]?.parameters[0]?.description).toContain('native_operation_id')
+    operation.steps[0]!.attributes = { mastercam_operation_id: 2, native_operation_id: 1 }
+    expect(() => toProcessPlan(input, config())).toThrow('不一致')
   })
   it('只接受离散值，禁止0.45及未知来源编辑', () => {
     const input = plan(),

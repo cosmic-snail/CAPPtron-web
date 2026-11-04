@@ -230,6 +230,24 @@ export function ProcessPlanningPage({
                   </button>
                 )}
               </div>
+              {(() => {
+                const setups = session.plan.operations.reduce<string[]>((order, item) => {
+                  if (item.setupId && order.at(-1) !== item.setupId) order.push(item.setupId)
+                  return order
+                }, [])
+                if (!setups.length) return null
+                return (
+                  <p className="muted-text" aria-label="装夹顺序">
+                    装夹顺序 ·{' '}
+                    {setups
+                      .map(
+                        (setup) =>
+                          `${setup}（${session.plan.operations.filter((item) => item.setupId === setup).length}）`,
+                      )
+                      .join(' → ')}
+                  </p>
+                )
+              })()}
               <nav className="operation-list" aria-label="工序列表">
                 {(live || !!session.plan.taskMeasurements?.length) && taskInformation}
                 {!session.plan.operations.length && <p className="muted-text">当前方案没有工序</p>}
@@ -246,7 +264,16 @@ export function ProcessPlanningPage({
                     }
                   >
                     <span>{String(item.sequence).padStart(2, '0')}</span>
-                    <span>{item.name}</span>
+                    <span>
+                      {item.name}
+                      {item.setupId ? ` · ${item.setupId}` : ''}
+                      {(() => {
+                        const native = item.steps
+                          .flatMap((step) => step.parameters)
+                          .find((parameter) => parameter.id === 'mastercam_operation_id')
+                        return native?.value == null ? '' : ` · 原生 ${native.value}`
+                      })()}
+                    </span>
                     {operationBadge(item.id) && (
                       <span className="input-badge">{operationBadge(item.id)}</span>
                     )}

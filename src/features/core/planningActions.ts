@@ -9,7 +9,7 @@ type ActionState = {
   admission?: string
   error?: string
   executable?: unknown
-  cam?: { status: string }
+  cam?: { status: string; reset_required?: boolean }
   card?: { status: string; execution_preflight?: Check }
   task?: { task_id: string; current_revision: number }
   plan?: { result_id: string }
@@ -21,6 +21,10 @@ type ActionState = {
       preflight?: Check
     }[]
   }
+}
+
+function confirmedTerminalCam(cam?: { status: string; reset_required?: boolean }) {
+  return !!cam && !cam.reset_required && (cam.status === 'failed' || cam.status === 'cancelled')
 }
 
 export function planningActions(state: ActionState) {
@@ -48,7 +52,9 @@ export function planningActions(state: ActionState) {
     (!state.reviewer.trim() ? '请填写审核人 ID，再批准当前工艺卡。' : '')
   const runReason =
     pending ||
-    (state.cam ? '已有 CAM 运行，请点击“查看 CAM / NC”查询结果。' : '') ||
+    (state.cam && !confirmedTerminalCam(state.cam)
+      ? '已有 CAM 运行，请点击“查看 CAM / NC”查询结果。'
+      : '') ||
     state.admission ||
     checkReason ||
     (!state.approved?.execution_configured ? '执行服务尚未配置，请维护人员检查。' : '') ||
@@ -58,15 +64,16 @@ export function planningActions(state: ActionState) {
       : '') ||
     (state.error ? `${state.error}；请先查询并确认结果。` : '') ||
     (!state.executable ? '执行资格尚待确认，请重新查询当前任务。' : '')
-  const status = state.cam
-    ? 'CAM 已提交 · 查看运行结果'
-    : approved
-      ? runReason
-        ? '已批准 · 执行待就绪'
-        : '已批准 · 可生成 NC'
-      : approveReason
-        ? '待处理 · 查看下一步'
-        : '待批准当前工艺卡'
+  const status =
+    state.cam && !confirmedTerminalCam(state.cam)
+      ? 'CAM 已提交 · 查看运行结果'
+      : approved
+        ? runReason
+          ? '已批准 · 执行待就绪'
+          : '已批准 · 可生成 NC'
+        : approveReason
+          ? '待处理 · 查看下一步'
+          : '待批准当前工艺卡'
   const nextAction = approved
     ? runReason || '点击“运行 Mastercam”生成 NC 候选。'
     : approveReason || '核对工艺后，点击“批准当前工艺卡”。'

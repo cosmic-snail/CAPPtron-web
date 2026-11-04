@@ -32,6 +32,7 @@ import { CommandJournal, migrateJournalScopes } from '../../api/core/commandJour
 import { recoverLocation, UnrecoverableTaskError } from '../../api/core/liveRecovery'
 import { journalFetcher, fileDigest } from '../../api/core/journalTransport'
 import { deploymentFromPlan, parameterChanges, toProcessPlan } from '../../api/core/viewModel'
+import { preparationBlocksExecution, preparationNote } from './admission'
 import type { PlanningSession } from '../process-planning/useWorkflowSession'
 
 type State = {
@@ -505,6 +506,12 @@ export function useLiveWorkflow(file?: File, runtime?: WorkflowRuntime) {
             for (const parameter of operation.parameters) parameter.editable = false
         const feedback = await api.get<SupplementList>(`${path(task)}/feedback`)
         const recorded = applySupplement(model, feedback)
+        const preparationIssues = plan.payload.extensions.preparation?.issues
+        const preparationBlocks = preparationBlocksExecution(
+          plan.payload.extensions.execution_ready,
+          preparationIssues,
+        )
+        const note = preparationNote(plan.payload.extensions.execution_ready, preparationIssues)
         const card = await api.get<Card>(cardPath(task.task_id, plan.revision))
         if (
           card.task_id !== task.task_id ||
@@ -523,9 +530,10 @@ export function useLiveWorkflow(file?: File, runtime?: WorkflowRuntime) {
           card,
           approved,
           status: '工艺方案已就绪',
-          supplementStatus: recorded
-            ? '现场信息已从服务端回读；未应用到 CAM，仍需工程核对。'
-            : undefined,
+          supplementStatus:
+            [recorded ? '现场信息已从服务端回读；未应用到 CAM，仍需工程核对。' : '', note]
+              .filter(Boolean)
+              .join(' ') || undefined,
           admission:
             model.onsiteAssessment?.input_status === 'valid' &&
             model.onsiteAssessment.execution_status === 'blocked'
@@ -534,8 +542,8 @@ export function useLiveWorkflow(file?: File, runtime?: WorkflowRuntime) {
                 ? `现场输入需要修正：${model.onsiteAssessment.issues.map((x) => x.message).join('；')}`
                 : plan.payload.extensions.onsite_diagnostics?.length
                   ? plan.payload.extensions.onsite_diagnostics.map((x) => x.message).join('；')
-                  : plan.payload.extensions.preparation?.issues.length
-                    ? plan.payload.extensions.preparation.issues.map((x) => x.detail).join('；')
+                  : preparationBlocks
+                    ? preparationIssues?.map((item) => item.detail).join('；')
                     : current.needs_replan
                       ? '本版工艺已生成，可查看；补充信息尚未满足规划与校验要求，当前不能批准或执行 CAM。'
                       : blocked
@@ -897,6 +905,19 @@ export function useLiveWorkflow(file?: File, runtime?: WorkflowRuntime) {
         cam.plan_ref?.revision !== state.task?.current_revision
       )
         throw new Error('CAM 运行与当前任务修订不匹配')
+      if (
+        cam.status === 'awaiting_confirmation' &&
+        cam.allowed_actions.includes('reconcile') &&
+        !cam.reset_required
+      ) {
+        cam = await api.reconcile<CamRun>(id)
+        if (
+          cam.cam_run_id !== id ||
+          cam.plan_ref?.task_id !== state.task?.task_id ||
+          cam.plan_ref?.revision !== state.task?.current_revision
+        )
+          throw new Error('CAM 恢复结果与当前任务修订不匹配')
+      }
       if (cam.allowed_actions.includes('observe') && ['accepted', 'running'].includes(cam.status)) {
         try {
           cam = await api.observe<CamRun>(id)
@@ -928,7 +949,8 @@ export function useLiveWorkflow(file?: File, runtime?: WorkflowRuntime) {
       !state.task ||
       !state.approved?.execution_profile_id ||
       retry.current ||
-      state.cam
+      (state.cam &&
+        (state.cam.reset_required || !['failed', 'cancelled'].includes(state.cam.status)))
     )
       return
     const body = {
