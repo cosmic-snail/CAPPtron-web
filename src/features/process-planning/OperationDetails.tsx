@@ -27,6 +27,14 @@ export function OperationDetails({
           {String(operation.sequence).padStart(2, '0')} {operation.name}
         </h3>
         <p className="muted-text">来源：{operation.source}</p>
+        {plan.engineeringStatus && (
+          <p className="warning-text">
+            工程状态 {plan.engineeringStatus}。工艺卡批准或 CAM 完成不代表制造验收通过。
+          </p>
+        )}
+        {plan.parametersFrozen && (
+          <p className="muted-text">参数规则为空：模板已冻结。下列参数只读，不能编辑。</p>
+        )}
         <div className="detail-switch" role="group" aria-label="工序详情视图">
           {(
             [

@@ -86,6 +86,8 @@ export type ProcessPlan = {
   partName: string
   origin: 'mock' | 'live'
   sourceDescription: string
+  engineeringStatus?: string
+  parametersFrozen?: boolean
   operations: ProcessOperation[]
   initialOperationId?: string
   taskMeasurements?: Parameter[]
