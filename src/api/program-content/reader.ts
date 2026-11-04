@@ -1,3 +1,4 @@
+import { sha256Hex } from '../browserCrypto'
 import type { CaseDocument, ProgramAsset } from '../case-catalog/types'
 import { decodeProgram } from './format'
 import type { ProgramFormat } from './format'
@@ -14,8 +15,7 @@ export interface ProgramContentReader {
 }
 
 export async function verifyProgramBytes(bytes: Uint8Array<ArrayBuffer>, asset: ProgramAsset) {
-  const hash = await crypto.subtle.digest('SHA-256', bytes)
-  const digest = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('')
+  const digest = await sha256Hex(bytes)
   if (
     !asset.sha256 ||
     asset.sizeBytes === undefined ||

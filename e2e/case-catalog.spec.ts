@@ -41,7 +41,7 @@ test('JSON 环件现场草稿与 Agent 保留，历史参考不能生成 NC', as
   await load(page)
   expect(requested.some((url) => url.endsWith('/golden-b7/v2.json'))).toBe(true)
   const operations = page.getByRole('navigation', { name: '工序列表' })
-  await expect(operations.getByRole('button')).toHaveCount(6)
+  await expect(operations.getByRole('button')).toHaveCount(7)
   await page.getByRole('button', { name: '参数与资源', exact: true }).click()
   await expect(page.getByRole('region', { name: '推荐参数列表' })).toContainText('295')
   const historicalParameters = page.getByRole('region', { name: '推荐参数列表' })
@@ -51,10 +51,13 @@ test('JSON 环件现场草稿与 Agent 保留，历史参考不能生成 NC', as
   await page.getByRole('button', { name: /^任务共用信息/ }).click()
   await page.getByLabel('现场毛坯外径', { exact: true }).fill('43')
   await shot(page, info, 'catalog-shared-information')
-  await expect(page.getByRole('button', { name: '定位待填工序，1 项' })).toBeInViewport({
+  await expect(page.getByRole('button', { name: '定位待填信息，5 项' })).toBeInViewport({
     ratio: 1,
   })
-  await page.getByRole('button', { name: '定位待填工序，1 项' }).click()
+  await page.getByRole('button', { name: '定位待填信息，5 项' }).click()
+  await expect(page.getByLabel('现场毛坯外径', { exact: true })).toHaveValue('43')
+  await operations.getByRole('button', { name: /05 内孔精车/ }).click()
+  await page.getByRole('button', { name: '补充信息', exact: true }).click()
   await expect(page.getByLabel('现场毛坯外径', { exact: true })).toHaveCount(0)
   await expect(page.getByLabel('内孔表面粗糙度要求 Ra', { exact: true })).toBeVisible()
   await expect(page.getByLabel('内孔表面粗糙度要求 Ra', { exact: true })).toHaveValue('')

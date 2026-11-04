@@ -61,6 +61,29 @@
 .planning-progress-status progress::-moz-progress-bar {
   background: var(--accent-primary);
 }
+.planning-progress-status progress:indeterminate::-webkit-progress-bar {
+  background: linear-gradient(
+    90deg,
+    var(--border-subtle) 25%,
+    var(--accent-primary) 50%,
+    var(--border-subtle) 75%
+  );
+  background-size: 200% 100%;
+  animation: core-waiting 1.6s linear infinite;
+}
+@keyframes core-waiting {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planning-progress-status progress:indeterminate::-webkit-progress-bar {
+    animation: none;
+  }
+}
 .progress-percentage {
   color: var(--accent-primary);
   font-variant-numeric: tabular-nums;
@@ -197,8 +220,12 @@
   margin-top: 8px;
   font-size: 12px;
 }
-.task-information-button {
+.button.task-information-button {
   width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  min-height: 40px;
+  line-height: 20px;
   justify-content: space-between;
   gap: 8px;
 }
@@ -351,7 +378,8 @@
 .parameter-field > * {
   min-width: 0;
 }
-.parameter-field p {
+.parameter-field p,
+.parameter-help {
   font-size: 12px;
   line-height: 20px;
 }
@@ -369,7 +397,8 @@
   font-size: 12px;
   color: var(--text-secondary);
 }
-.parameter-value input {
+.parameter-value input,
+.parameter-value select {
   width: 100%;
   flex: 1;
   min-width: 80px;
@@ -569,6 +598,55 @@
 .message-user {
   background: var(--surface-raised);
 }
+/* 真实 Agent：同一轮的问题与回答相邻，查询卡片与依据保持次要层级。 */
+.agent-turn > * + * {
+  margin-top: 12px;
+}
+.message-agent p:not(.muted-text) {
+  white-space: pre-wrap;
+}
+.agent-tools {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  line-height: 20px;
+}
+.agent-tools li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  border-radius: var(--radius-panel);
+  background: var(--surface-canvas);
+}
+.agent-tool-status {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+.agent-tool-status.tool-no_record,
+.agent-tool-status.tool-rejected,
+.agent-tool-status.tool-failed {
+  color: var(--text-warning);
+}
+.agent-citations {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 20px;
+}
+.agent-citations summary {
+  cursor: pointer;
+  color: var(--accent-primary);
+}
+.agent-citations ul {
+  margin: 4px 0 0;
+  padding-left: 16px;
+}
+.agent-citations code {
+  font-size: 11px;
+}
 .agent-composer {
   display: grid;
   gap: 12px;
@@ -620,7 +698,7 @@
   .parameter-field {
     grid-template-columns: minmax(120px, 1fr) minmax(140px, 1fr);
   }
-  .parameter-field > p {
+  .parameter-field > .parameter-help {
     grid-column: 1 / -1;
   }
 }
@@ -668,4 +746,110 @@
   .agent-drawer {
     padding: 20px;
   }
+}
+.live-planning-page .operation-list-heading {
+  padding-block: 8px;
+}
+.live-planning-page .pending-operation-jump {
+  min-height: 24px;
+  padding-block: 0;
+}
+.live-planning-actions {
+  gap: 20px;
+}
+.live-planning-actions > .live-planning-status {
+  display: block;
+  flex: 1;
+  min-width: 0;
+}
+.live-planning-status > p {
+  white-space: nowrap;
+}
+.live-status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.live-status-details {
+  position: relative;
+  min-width: 0;
+  flex: 1;
+  font-size: 12px;
+  line-height: 20px;
+}
+.live-status-details summary {
+  cursor: pointer;
+  color: var(--text-warning);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.live-status-details summary::before {
+  content: '▸';
+}
+.live-status-details[open] summary::before {
+  content: '▾';
+}
+.live-status-details summary span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.live-status-popover {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 12px);
+  z-index: 20;
+  width: min(440px, 75vw);
+  max-height: 280px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-panel);
+  background: var(--surface-canvas);
+}
+.live-status-popover p + p {
+  margin-top: 8px;
+}
+.live-status-row > .button {
+  flex-shrink: 0;
+  min-height: 24px;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+.live-planning-actions > .live-planning-controls {
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.live-planning-controls > .button {
+  white-space: nowrap;
+}
+.live-reviewer-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.live-reviewer-field input {
+  width: 144px;
+}
+@media (max-width: 1100px) {
+  .live-planning-actions > .live-planning-controls {
+    flex-wrap: wrap;
+  }
+  .live-planning-actions > .live-planning-status {
+    flex-basis: 100%;
+  }
+}
+
+.parameter-source-details summary {
+  cursor: pointer;
+  color: var(--accent-primary);
+}
+.parameter-source-details p {
+  overflow-wrap: anywhere;
+  margin-top: 6px;
 }

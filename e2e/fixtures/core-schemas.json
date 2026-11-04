@@ -1,0 +1,4668 @@
+{
+  "CadAsset": {
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+        "title": "Command Id",
+        "type": "string"
+      },
+      "filename": {
+        "maxLength": 255,
+        "minLength": 1,
+        "title": "Filename",
+        "type": "string"
+      },
+      "asset_id": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Asset Id",
+        "type": "string"
+      },
+      "sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Sha256",
+        "type": "string"
+      },
+      "size_bytes": {
+        "exclusiveMinimum": 0,
+        "title": "Size Bytes",
+        "type": "integer"
+      },
+      "status": {
+        "const": "not_parsed",
+        "default": "not_parsed",
+        "title": "Status",
+        "type": "string"
+      },
+      "format": {
+        "const": "step",
+        "default": "step",
+        "title": "Format",
+        "type": "string"
+      },
+      "created_at": {
+        "format": "date-time",
+        "title": "Created At",
+        "type": "string"
+      }
+    },
+    "required": [
+      "command_id",
+      "filename",
+      "asset_id",
+      "sha256",
+      "size_bytes",
+      "created_at"
+    ],
+    "title": "CadAsset",
+    "type": "object"
+  },
+  "CadParseResult": {
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+        "title": "Command Id",
+        "type": "string"
+      },
+      "asset_id": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Asset Id",
+        "type": "string"
+      },
+      "source_sha256": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Source Sha256",
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "running",
+          "parsed",
+          "failed"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "report_sha256": {
+        "anyOf": [
+          {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Report Sha256"
+      },
+      "nx_report": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Nx Report"
+      },
+      "analysis": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Analysis"
+      },
+      "script_sha256": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Script Sha256",
+        "type": "object"
+      },
+      "diagnostic": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Diagnostic"
+      },
+      "execution_ready": {
+        "const": false,
+        "default": false,
+        "title": "Execution Ready",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "command_id",
+      "asset_id",
+      "source_sha256",
+      "status"
+    ],
+    "title": "CadParseResult",
+    "type": "object"
+  },
+  "TaskView": {
+    "additionalProperties": false,
+    "properties": {
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "result_id": {
+        "minLength": 1,
+        "title": "Result Id",
+        "type": "string"
+      },
+      "trace_id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_request_id": {
+        "minLength": 1,
+        "title": "Source Request Id",
+        "type": "string"
+      },
+      "current_revision": {
+        "minimum": 0,
+        "title": "Current Revision",
+        "type": "integer"
+      },
+      "feedback_version": {
+        "minimum": 0,
+        "title": "Feedback Version",
+        "type": "integer"
+      },
+      "provider": {
+        "minLength": 1,
+        "title": "Provider",
+        "type": "string"
+      }
+    },
+    "required": [
+      "task_id",
+      "result_id",
+      "trace_id",
+      "source_request_id",
+      "current_revision",
+      "feedback_version",
+      "provider"
+    ],
+    "title": "TaskView",
+    "type": "object"
+  },
+  "RunView": {
+    "$defs": {
+      "DeliveryState": {
+        "additionalProperties": false,
+        "properties": {
+          "consumer": {
+            "enum": [
+              "unconfigured",
+              "pending",
+              "delivered",
+              "failed"
+            ],
+            "title": "Consumer",
+            "type": "string"
+          },
+          "frontend": {
+            "enum": [
+              "available",
+              "failed",
+              "pending"
+            ],
+            "title": "Frontend",
+            "type": "string"
+          }
+        },
+        "required": [
+          "consumer",
+          "frontend"
+        ],
+        "title": "DeliveryState",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "description": "Serializable error with a strict nonnegative integer code.",
+        "properties": {
+          "code": {
+            "minimum": 0,
+            "title": "Code",
+            "type": "integer"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Execution and delivery outcomes remain independent dimensions.",
+    "properties": {
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "run_id": {
+        "minLength": 1,
+        "title": "Run Id",
+        "type": "string"
+      },
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "queued",
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "basis_revision": {
+        "minimum": 0,
+        "title": "Basis Revision",
+        "type": "integer"
+      },
+      "basis_feedback_version": {
+        "minimum": 0,
+        "title": "Basis Feedback Version",
+        "type": "integer"
+      },
+      "used_feedback_ids": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "title": "Used Feedback Ids",
+        "type": "array"
+      },
+      "provider": {
+        "minLength": 1,
+        "title": "Provider",
+        "type": "string"
+      },
+      "needs_replan": {
+        "title": "Needs Replan",
+        "type": "boolean"
+      },
+      "delivery_state": {
+        "$ref": "#/$defs/DeliveryState"
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "enum": [
+              "human_request",
+              "validation_repair"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Reason"
+      },
+      "repair_chain_id": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Repair Chain Id"
+      },
+      "repair_attempt": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Repair Attempt"
+      },
+      "output_revision": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Output Revision"
+      },
+      "execution_error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ErrorDetail"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "delivery_error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ErrorDetail"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "task_id",
+      "run_id",
+      "command_id",
+      "status",
+      "basis_revision",
+      "basis_feedback_version",
+      "provider",
+      "needs_replan",
+      "delivery_state"
+    ],
+    "title": "RunView",
+    "type": "object"
+  },
+  "PlanProduced": {
+    "$defs": {
+      "FeedbackIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "code": {
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "stage": {
+            "minLength": 1,
+            "title": "Stage",
+            "type": "string"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "code",
+          "stage",
+          "message"
+        ],
+        "title": "FeedbackIssue",
+        "type": "object"
+      },
+      "FeedbackItem": {
+        "additionalProperties": false,
+        "description": "Historical value. Use model_copy(deep=True) to isolate nested containers.",
+        "properties": {
+          "feedback_id": {
+            "minLength": 1,
+            "title": "Feedback Id",
+            "type": "string"
+          },
+          "expected_feedback_version": {
+            "minimum": 0,
+            "title": "Expected Feedback Version",
+            "type": "integer"
+          },
+          "base_revision": {
+            "minimum": 0,
+            "title": "Base Revision",
+            "type": "integer"
+          },
+          "kind": {
+            "minLength": 1,
+            "title": "Kind",
+            "type": "string"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Text"
+          },
+          "supplement_schema_version": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Supplement Schema Version"
+          },
+          "supplement": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/JsonValue"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Supplement"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/FeedbackIssue"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "repair_chain_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Repair Chain Id"
+          },
+          "source": {
+            "$ref": "#/$defs/FeedbackSource"
+          },
+          "request_id": {
+            "minLength": 1,
+            "title": "Request Id",
+            "type": "string"
+          },
+          "received_at": {
+            "format": "date-time",
+            "title": "Received At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "deleted",
+              "superseded"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "digest": {
+            "minLength": 1,
+            "title": "Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feedback_id",
+          "expected_feedback_version",
+          "base_revision",
+          "kind",
+          "source",
+          "request_id",
+          "received_at",
+          "status",
+          "digest"
+        ],
+        "title": "FeedbackItem",
+        "type": "object"
+      },
+      "FeedbackSnapshot": {
+        "additionalProperties": false,
+        "description": "Active feedback captured for a run; subsequent edits cannot rewrite this value.",
+        "properties": {
+          "feedback_version": {
+            "minimum": 0,
+            "title": "Feedback Version",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/$defs/FeedbackItem"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "feedback_version"
+        ],
+        "title": "FeedbackSnapshot",
+        "type": "object"
+      },
+      "FeedbackSource": {
+        "description": "Stable source codes shared by call context and retained feedback.",
+        "enum": [
+          1,
+          2
+        ],
+        "title": "FeedbackSource",
+        "type": "integer"
+      },
+      "JsonValue": {}
+    },
+    "additionalProperties": false,
+    "description": "Result snapshot may reference machine contracts retained in the feedback ledger.\n\nProvider invocations keep full contracts; output-validation-v1 result supplements\nreplace target_contract with target_contract_ref (version, feedback_id, sha256).\nFeedbackItem.digest continues to identify the original feedback command.",
+    "properties": {
+      "schema_version": {
+        "minLength": 1,
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "payload": {
+        "additionalProperties": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "title": "Payload",
+        "type": "object"
+      },
+      "provider": {
+        "minLength": 1,
+        "title": "Provider",
+        "type": "string"
+      },
+      "event_id": {
+        "minLength": 1,
+        "title": "Event Id",
+        "type": "string"
+      },
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "result_id": {
+        "minLength": 1,
+        "title": "Result Id",
+        "type": "string"
+      },
+      "revision": {
+        "exclusiveMinimum": 0,
+        "title": "Revision",
+        "type": "integer"
+      },
+      "run_id": {
+        "minLength": 1,
+        "title": "Run Id",
+        "type": "string"
+      },
+      "trace_id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_request_id": {
+        "minLength": 1,
+        "title": "Source Request Id",
+        "type": "string"
+      },
+      "trigger_request_id": {
+        "minLength": 1,
+        "title": "Trigger Request Id",
+        "type": "string"
+      },
+      "feedback_snapshot": {
+        "$ref": "#/$defs/FeedbackSnapshot"
+      }
+    },
+    "required": [
+      "schema_version",
+      "payload",
+      "provider",
+      "event_id",
+      "task_id",
+      "result_id",
+      "revision",
+      "run_id",
+      "trace_id",
+      "source_request_id",
+      "trigger_request_id",
+      "feedback_snapshot"
+    ],
+    "title": "PlanProduced",
+    "type": "object"
+  },
+  "ProcessCardResponse": {
+    "$defs": {
+      "CardHeader": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "title": "Name",
+            "type": "string"
+          },
+          "model_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model Code"
+          },
+          "document_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Document Number"
+          },
+          "material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Material"
+          },
+          "quantity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Quantity"
+          },
+          "blank_specification": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Blank Specification"
+          },
+          "blank_quantity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Blank Quantity"
+          },
+          "pieces_per_blank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Pieces Per Blank"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CardHeader",
+        "type": "object"
+      },
+      "CardIdentity": {
+        "additionalProperties": false,
+        "properties": {
+          "event_id": {
+            "minLength": 1,
+            "title": "Event Id",
+            "type": "string"
+          },
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "result_id": {
+            "minLength": 1,
+            "title": "Result Id",
+            "type": "string"
+          },
+          "revision": {
+            "exclusiveMinimum": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "run_id": {
+            "minLength": 1,
+            "title": "Run Id",
+            "type": "string"
+          },
+          "trace_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "source_request_id": {
+            "minLength": 1,
+            "title": "Source Request Id",
+            "type": "string"
+          },
+          "trigger_request_id": {
+            "minLength": 1,
+            "title": "Trigger Request Id",
+            "type": "string"
+          },
+          "provider": {
+            "minLength": 1,
+            "title": "Provider",
+            "type": "string"
+          },
+          "basis_feedback_version": {
+            "minimum": 0,
+            "title": "Basis Feedback Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "event_id",
+          "task_id",
+          "result_id",
+          "revision",
+          "run_id",
+          "trace_id",
+          "source_request_id",
+          "trigger_request_id",
+          "provider",
+          "basis_feedback_version"
+        ],
+        "title": "CardIdentity",
+        "type": "object"
+      },
+      "CardIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "const": "card",
+            "default": "card",
+            "title": "Document",
+            "type": "string"
+          },
+          "stage": {
+            "minLength": 1,
+            "title": "Stage",
+            "type": "string"
+          },
+          "path": {
+            "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+            "title": "Path",
+            "type": "string"
+          },
+          "field_key": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$",
+            "title": "Field Key",
+            "type": "string"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/QueryScope"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "public_path": {
+            "anyOf": [
+              {
+                "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Public Path"
+          },
+          "source_paths": {
+            "items": {
+              "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+              "type": "string"
+            },
+            "title": "Source Paths",
+            "type": "array"
+          },
+          "code": {
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warning"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "repairable": {
+            "title": "Repairable",
+            "type": "boolean"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "stage",
+          "path",
+          "field_key",
+          "code",
+          "severity",
+          "repairable",
+          "message"
+        ],
+        "title": "CardIssue",
+        "type": "object"
+      },
+      "CardOperation": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "sequence": {
+            "exclusiveMinimum": 0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "name": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "title": "Name",
+            "type": "string"
+          },
+          "inspection_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Inspection Mode"
+          },
+          "resource_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Resource Notes"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/$defs/CardStep"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "name",
+          "steps"
+        ],
+        "title": "CardOperation",
+        "type": "object"
+      },
+      "CardStep": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "sequence": {
+            "exclusiveMinimum": 0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "content": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "title": "Content",
+            "type": "string"
+          },
+          "details": {
+            "additionalProperties": {
+              "$ref": "#/$defs/JsonValue"
+            },
+            "title": "Details",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "content"
+        ],
+        "title": "CardStep",
+        "type": "object"
+      },
+      "CardValidationReport": {
+        "additionalProperties": false,
+        "properties": {
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/CardIssue"
+            },
+            "maxItems": 50,
+            "title": "Issues",
+            "type": "array"
+          },
+          "total_count": {
+            "minimum": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "has_errors": {
+            "title": "Has Errors",
+            "type": "boolean"
+          },
+          "has_nonrepairable_errors": {
+            "title": "Has Nonrepairable Errors",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "issues",
+          "total_count",
+          "truncated",
+          "has_errors",
+          "has_nonrepairable_errors"
+        ],
+        "title": "CardValidationReport",
+        "type": "object"
+      },
+      "JsonValue": {},
+      "OutputIssue": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "enum": [
+              "raw",
+              "normalized"
+            ],
+            "title": "Document",
+            "type": "string"
+          },
+          "stage": {
+            "minLength": 1,
+            "title": "Stage",
+            "type": "string"
+          },
+          "path": {
+            "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+            "title": "Path",
+            "type": "string"
+          },
+          "code": {
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warning"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "repairable": {
+            "title": "Repairable",
+            "type": "boolean"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "document",
+          "stage",
+          "path",
+          "code",
+          "severity",
+          "repairable",
+          "message"
+        ],
+        "title": "OutputIssue",
+        "type": "object"
+      },
+      "ProcessCard": {
+        "additionalProperties": false,
+        "properties": {
+          "identity": {
+            "$ref": "#/$defs/CardIdentity"
+          },
+          "template_id": {
+            "minLength": 1,
+            "title": "Template Id",
+            "type": "string"
+          },
+          "template_version": {
+            "minLength": 1,
+            "title": "Template Version",
+            "type": "string"
+          },
+          "template_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Template Digest",
+            "type": "string"
+          },
+          "profile_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Profile Digest",
+            "type": "string"
+          },
+          "header": {
+            "$ref": "#/$defs/CardHeader"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/$defs/CardOperation"
+            },
+            "title": "Operations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "identity",
+          "template_id",
+          "template_version",
+          "template_digest",
+          "profile_digest",
+          "header",
+          "operations"
+        ],
+        "title": "ProcessCard",
+        "type": "object"
+      },
+      "QueryScope": {
+        "additionalProperties": false,
+        "properties": {
+          "operation_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Operation Id"
+          },
+          "step_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Step Id"
+          }
+        },
+        "title": "QueryScope",
+        "type": "object"
+      },
+      "ReviewSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "enum": [
+              "approve",
+              "reject"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "feedback_version": {
+            "minimum": 0,
+            "title": "Feedback Version",
+            "type": "integer"
+          },
+          "reviewer_id": {
+            "minLength": 1,
+            "title": "Reviewer Id",
+            "type": "string"
+          },
+          "authenticated": {
+            "title": "Authenticated",
+            "type": "boolean"
+          },
+          "reviewed_at": {
+            "format": "date-time",
+            "title": "Reviewed At",
+            "type": "string"
+          },
+          "request_id": {
+            "minLength": 1,
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision",
+          "feedback_version",
+          "reviewer_id",
+          "authenticated",
+          "reviewed_at",
+          "request_id"
+        ],
+        "title": "ReviewSummary",
+        "type": "object"
+      },
+      "ValidationReport": {
+        "additionalProperties": false,
+        "properties": {
+          "issues": {
+            "items": {
+              "$ref": "#/$defs/OutputIssue"
+            },
+            "maxItems": 50,
+            "title": "Issues",
+            "type": "array"
+          },
+          "total_count": {
+            "minimum": 0,
+            "title": "Total Count",
+            "type": "integer"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "has_errors": {
+            "title": "Has Errors",
+            "type": "boolean"
+          },
+          "has_nonrepairable_errors": {
+            "title": "Has Nonrepairable Errors",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "issues",
+          "total_count",
+          "truncated",
+          "has_errors",
+          "has_nonrepairable_errors"
+        ],
+        "title": "ValidationReport",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "engineering_status": {
+        "anyOf": [
+          {
+            "enum": [
+              "pending",
+              "validated"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Engineering Status"
+      },
+      "event_id": {
+        "minLength": 1,
+        "title": "Event Id",
+        "type": "string"
+      },
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "result_id": {
+        "minLength": 1,
+        "title": "Result Id",
+        "type": "string"
+      },
+      "revision": {
+        "exclusiveMinimum": 0,
+        "title": "Revision",
+        "type": "integer"
+      },
+      "run_id": {
+        "minLength": 1,
+        "title": "Run Id",
+        "type": "string"
+      },
+      "trace_id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "source_request_id": {
+        "minLength": 1,
+        "title": "Source Request Id",
+        "type": "string"
+      },
+      "trigger_request_id": {
+        "minLength": 1,
+        "title": "Trigger Request Id",
+        "type": "string"
+      },
+      "expected_feedback_version": {
+        "minimum": 0,
+        "title": "Expected Feedback Version",
+        "type": "integer"
+      },
+      "basis_feedback_version": {
+        "minimum": 0,
+        "title": "Basis Feedback Version",
+        "type": "integer"
+      },
+      "status": {
+        "enum": [
+          "ready",
+          "invalid",
+          "unavailable"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "template_id": {
+        "minLength": 1,
+        "title": "Template Id",
+        "type": "string"
+      },
+      "template_version": {
+        "minLength": 1,
+        "title": "Template Version",
+        "type": "string"
+      },
+      "template_digest": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Template Digest",
+        "type": "string"
+      },
+      "report": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/CardValidationReport"
+          },
+          {
+            "$ref": "#/$defs/ValidationReport"
+          }
+        ],
+        "title": "Report"
+      },
+      "publication_state": {
+        "enum": [
+          "pending",
+          "published",
+          "blocked",
+          "failed"
+        ],
+        "title": "Publication State",
+        "type": "string"
+      },
+      "card": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ProcessCard"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "review": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ReviewSummary"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "event_id",
+      "task_id",
+      "result_id",
+      "revision",
+      "run_id",
+      "trace_id",
+      "source_request_id",
+      "trigger_request_id",
+      "expected_feedback_version",
+      "basis_feedback_version",
+      "status",
+      "template_id",
+      "template_version",
+      "template_digest",
+      "report",
+      "publication_state"
+    ],
+    "title": "ProcessCardResponse",
+    "type": "object"
+  },
+  "ApprovedPlanList": {
+    "$defs": {
+      "ApprovedPlanRef": {
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "result_id": {
+            "minLength": 1,
+            "title": "Result Id",
+            "type": "string"
+          },
+          "revision": {
+            "exclusiveMinimum": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "archive_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Archive Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "result_id",
+          "revision",
+          "archive_digest"
+        ],
+        "title": "ApprovedPlanRef",
+        "type": "object"
+      },
+      "ApprovedPlanSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "engineering_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "pending",
+                  "validated"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Engineering Status"
+          },
+          "plan_ref": {
+            "$ref": "#/$defs/ApprovedPlanRef"
+          },
+          "trace_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "archived_at": {
+            "format": "date-time",
+            "title": "Archived At",
+            "type": "string"
+          },
+          "profile_matches": {
+            "title": "Profile Matches",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "plan_ref",
+          "trace_id",
+          "archived_at",
+          "profile_matches"
+        ],
+        "title": "ApprovedPlanSummary",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "execution_configured": {
+        "title": "Execution Configured",
+        "type": "boolean"
+      },
+      "execution_profile_id": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Execution Profile Id"
+      },
+      "plans": {
+        "items": {
+          "$ref": "#/$defs/ApprovedPlanSummary"
+        },
+        "title": "Plans",
+        "type": "array"
+      }
+    },
+    "required": [
+      "execution_configured",
+      "plans"
+    ],
+    "title": "ApprovedPlanList",
+    "type": "object"
+  },
+  "CamRunView": {
+    "$defs": {
+      "ApprovedPlanRef": {
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "result_id": {
+            "minLength": 1,
+            "title": "Result Id",
+            "type": "string"
+          },
+          "revision": {
+            "exclusiveMinimum": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "archive_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Archive Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "result_id",
+          "revision",
+          "archive_digest"
+        ],
+        "title": "ApprovedPlanRef",
+        "type": "object"
+      },
+      "CloseoutSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "evidence_action": {
+            "enum": [
+              "cancel",
+              "reset"
+            ],
+            "title": "Evidence Action",
+            "type": "string"
+          },
+          "evidence_command_id": {
+            "minLength": 1,
+            "title": "Evidence Command Id",
+            "type": "string"
+          },
+          "operator_id": {
+            "minLength": 1,
+            "title": "Operator Id",
+            "type": "string"
+          },
+          "identity_source": {
+            "const": "declared",
+            "default": "declared",
+            "title": "Identity Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason",
+          "evidence_action",
+          "evidence_command_id",
+          "operator_id"
+        ],
+        "title": "CloseoutSummary",
+        "type": "object"
+      },
+      "ControlSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "cancel",
+              "reset"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "submitted",
+              "unknown",
+              "confirmed",
+              "rejected"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "status",
+          "observed_at"
+        ],
+        "title": "ControlSummary",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "description": "Serializable error with a strict nonnegative integer code.",
+        "properties": {
+          "code": {
+            "minimum": 0,
+            "title": "Code",
+            "type": "integer"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "HealthSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "enum": [
+              "observed",
+              "unavailable"
+            ],
+            "title": "Availability",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "enum": [
+                  "idle",
+                  "busy",
+                  "reset_required",
+                  "offline"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "State"
+          },
+          "executor_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Executor Id"
+          },
+          "active_run_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Active Run Id"
+          }
+        },
+        "required": [
+          "availability",
+          "observed_at"
+        ],
+        "title": "HealthSummary",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "engineering_status": {
+        "anyOf": [
+          {
+            "enum": [
+              "pending",
+              "validated"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Engineering Status"
+      },
+      "cam_run_id": {
+        "minLength": 1,
+        "title": "Cam Run Id",
+        "type": "string"
+      },
+      "root_run_id": {
+        "minLength": 1,
+        "title": "Root Run Id",
+        "type": "string"
+      },
+      "plan_ref": {
+        "$ref": "#/$defs/ApprovedPlanRef"
+      },
+      "kind": {
+        "enum": [
+          "generate",
+          "revise"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "accepted",
+          "running",
+          "awaiting_confirmation",
+          "succeeded",
+          "failed",
+          "cancelled"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "phase": {
+        "enum": [
+          "prepare",
+          "feedback",
+          "edit_nc",
+          "generate_code",
+          "build",
+          "execute",
+          "collect"
+        ],
+        "title": "Phase",
+        "type": "string"
+      },
+      "state_version": {
+        "exclusiveMinimum": 0,
+        "title": "State Version",
+        "type": "integer"
+      },
+      "outcome": {
+        "anyOf": [
+          {
+            "enum": [
+              "candidate",
+              "needs_plan_change"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Outcome"
+      },
+      "current_candidate": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/NcVersionRef"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "error": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ErrorDetail"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "reset_required": {
+        "title": "Reset Required",
+        "type": "boolean"
+      },
+      "explanation": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Explanation"
+      },
+      "observation": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/HealthSummary"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "control": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ControlSummary"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "closeout": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/CloseoutSummary"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "allowed_actions": {
+        "items": {
+          "enum": [
+            "reconcile",
+            "observe",
+            "cancel",
+            "closeout",
+            "reset",
+            "save",
+            "review",
+            "revise",
+            "download"
+          ],
+          "type": "string"
+        },
+        "title": "Allowed Actions",
+        "type": "array"
+      },
+      "trace_id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+        "title": "Trace Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "cam_run_id",
+      "root_run_id",
+      "plan_ref",
+      "kind",
+      "status",
+      "phase",
+      "state_version",
+      "reset_required",
+      "allowed_actions",
+      "trace_id"
+    ],
+    "title": "CamRunView",
+    "type": "object"
+  },
+  "NcVersionView": {
+    "$defs": {
+      "ApprovedPlanRef": {
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "result_id": {
+            "minLength": 1,
+            "title": "Result Id",
+            "type": "string"
+          },
+          "revision": {
+            "exclusiveMinimum": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "archive_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Archive Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "result_id",
+          "revision",
+          "archive_digest"
+        ],
+        "title": "ApprovedPlanRef",
+        "type": "object"
+      },
+      "NcFileSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "file_id": {
+            "minLength": 1,
+            "title": "File Id",
+            "type": "string"
+          },
+          "filename": {
+            "minLength": 1,
+            "title": "Filename",
+            "type": "string"
+          },
+          "setup_id": {
+            "minLength": 1,
+            "title": "Setup Id",
+            "type": "string"
+          },
+          "sequence": {
+            "exclusiveMinimum": 0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "encoding": {
+            "minLength": 1,
+            "title": "Encoding",
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "file_id",
+          "filename",
+          "setup_id",
+          "sequence",
+          "encoding",
+          "sha256",
+          "size_bytes"
+        ],
+        "title": "NcFileSummary",
+        "type": "object"
+      },
+      "NcReviewSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "decision": {
+            "enum": [
+              "approve",
+              "reject"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "reviewer_id": {
+            "minLength": 1,
+            "title": "Reviewer Id",
+            "type": "string"
+          },
+          "reviewed_at": {
+            "format": "date-time",
+            "title": "Reviewed At",
+            "type": "string"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Comment"
+          },
+          "request_id": {
+            "minLength": 1,
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision",
+          "reviewer_id",
+          "reviewed_at",
+          "request_id"
+        ],
+        "title": "NcReviewSummary",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "engineering_status": {
+        "anyOf": [
+          {
+            "enum": [
+              "pending",
+              "validated"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Engineering Status"
+      },
+      "ref": {
+        "$ref": "#/$defs/NcVersionRef"
+      },
+      "plan_ref": {
+        "$ref": "#/$defs/ApprovedPlanRef"
+      },
+      "origin": {
+        "enum": [
+          "cam_generated",
+          "human_edit",
+          "agent_edit"
+        ],
+        "title": "Origin",
+        "type": "string"
+      },
+      "parent": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/NcVersionRef"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "feedback_id": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Feedback Id"
+      },
+      "review_status": {
+        "enum": [
+          "pending",
+          "approved",
+          "rejected"
+        ],
+        "title": "Review Status",
+        "type": "string"
+      },
+      "files": {
+        "items": {
+          "$ref": "#/$defs/NcFileSummary"
+        },
+        "title": "Files",
+        "type": "array"
+      },
+      "reviews": {
+        "items": {
+          "$ref": "#/$defs/NcReviewSummary"
+        },
+        "title": "Reviews",
+        "type": "array"
+      },
+      "simulation_version": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/NcVersionRef"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "comparison_sha256": {
+        "anyOf": [
+          {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Comparison Sha256"
+      },
+      "root_run_id": {
+        "minLength": 1,
+        "title": "Root Run Id",
+        "type": "string"
+      },
+      "is_current_candidate": {
+        "title": "Is Current Candidate",
+        "type": "boolean"
+      },
+      "allowed_actions": {
+        "items": {
+          "enum": [
+            "reconcile",
+            "observe",
+            "cancel",
+            "closeout",
+            "reset",
+            "save",
+            "review",
+            "revise",
+            "download"
+          ],
+          "type": "string"
+        },
+        "title": "Allowed Actions",
+        "type": "array"
+      }
+    },
+    "required": [
+      "ref",
+      "plan_ref",
+      "origin",
+      "review_status",
+      "files",
+      "reviews",
+      "root_run_id",
+      "is_current_candidate",
+      "allowed_actions"
+    ],
+    "title": "NcVersionView",
+    "type": "object"
+  },
+  "CamRunReceipt": {
+    "$defs": {
+      "CamRunContext": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "request_id": {
+            "minLength": 1,
+            "title": "Request Id",
+            "type": "string"
+          },
+          "trace_id": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+            "title": "Trace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "request_id",
+          "trace_id"
+        ],
+        "title": "CamRunContext",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "context": {
+        "$ref": "#/$defs/CamRunContext"
+      },
+      "kind": {
+        "enum": [
+          "generate",
+          "revise"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "feedback_id": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Feedback Id"
+      },
+      "base": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/NcVersionRef"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "command_id",
+      "context",
+      "kind"
+    ],
+    "title": "CamRunReceipt",
+    "type": "object"
+  },
+  "ReviewReceipt": {
+    "additionalProperties": false,
+    "properties": {
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "result_id": {
+        "minLength": 1,
+        "title": "Result Id",
+        "type": "string"
+      },
+      "revision": {
+        "exclusiveMinimum": 0,
+        "title": "Revision",
+        "type": "integer"
+      },
+      "decision": {
+        "enum": [
+          "approve",
+          "reject"
+        ],
+        "title": "Decision",
+        "type": "string"
+      },
+      "archive_status": {
+        "enum": [
+          "archived",
+          "not_required"
+        ],
+        "title": "Archive Status",
+        "type": "string"
+      },
+      "archive_id": {
+        "anyOf": [
+          {
+            "minLength": 1,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Archive Id"
+      },
+      "trace_id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "request_id": {
+        "minLength": 1,
+        "title": "Request Id",
+        "type": "string"
+      },
+      "reviewed_at": {
+        "format": "date-time",
+        "title": "Reviewed At",
+        "type": "string"
+      }
+    },
+    "required": [
+      "task_id",
+      "result_id",
+      "revision",
+      "decision",
+      "archive_status",
+      "trace_id",
+      "request_id",
+      "reviewed_at"
+    ],
+    "title": "ReviewReceipt",
+    "type": "object"
+  },
+  "NcReviewReceipt": {
+    "$defs": {
+      "NcReviewRecord": {
+        "additionalProperties": false,
+        "properties": {
+          "nc_ref": {
+            "$ref": "#/$defs/NcVersionRef"
+          },
+          "decision": {
+            "enum": [
+              "approve",
+              "reject"
+            ],
+            "title": "Decision",
+            "type": "string"
+          },
+          "reviewer_id": {
+            "minLength": 1,
+            "title": "Reviewer Id",
+            "type": "string"
+          },
+          "reviewed_at": {
+            "format": "date-time",
+            "title": "Reviewed At",
+            "type": "string"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Comment"
+          }
+        },
+        "required": [
+          "nc_ref",
+          "decision",
+          "reviewer_id",
+          "reviewed_at"
+        ],
+        "title": "NcReviewRecord",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Identity is caller-declared; this contract does not provide authentication.",
+    "properties": {
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "request_id": {
+        "minLength": 1,
+        "title": "Request Id",
+        "type": "string"
+      },
+      "identity_source": {
+        "const": "declared",
+        "default": "declared",
+        "title": "Identity Source",
+        "type": "string"
+      },
+      "review": {
+        "$ref": "#/$defs/NcReviewRecord"
+      }
+    },
+    "required": [
+      "command_id",
+      "request_id",
+      "review"
+    ],
+    "title": "NcReviewReceipt",
+    "type": "object"
+  },
+  "ApiErrorResponse": {
+    "$defs": {
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "description": "Serializable error with a strict nonnegative integer code.",
+        "properties": {
+          "code": {
+            "minimum": 0,
+            "title": "Code",
+            "type": "integer"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "InputIssue": {
+        "additionalProperties": false,
+        "description": "Safe message and JSON Pointer relative to the external request root.",
+        "properties": {
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "code": {
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "code",
+          "message"
+        ],
+        "title": "InputIssue",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "error": {
+        "$ref": "#/$defs/ErrorDetail"
+      },
+      "request_id": {
+        "minLength": 1,
+        "title": "Request Id",
+        "type": "string"
+      },
+      "trace_id": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+        "title": "Trace Id",
+        "type": "string"
+      },
+      "issues": {
+        "items": {
+          "$ref": "#/$defs/InputIssue"
+        },
+        "maxItems": 50,
+        "title": "Issues",
+        "type": "array"
+      }
+    },
+    "required": [
+      "error",
+      "request_id",
+      "trace_id"
+    ],
+    "title": "ApiErrorResponse",
+    "type": "object"
+  },
+  "RunReceipt": {
+    "$defs": {
+      "DeliveryState": {
+        "additionalProperties": false,
+        "properties": {
+          "consumer": {
+            "enum": [
+              "unconfigured",
+              "pending",
+              "delivered",
+              "failed"
+            ],
+            "title": "Consumer",
+            "type": "string"
+          },
+          "frontend": {
+            "enum": [
+              "available",
+              "failed",
+              "pending"
+            ],
+            "title": "Frontend",
+            "type": "string"
+          }
+        },
+        "required": [
+          "consumer",
+          "frontend"
+        ],
+        "title": "DeliveryState",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "run_id": {
+        "minLength": 1,
+        "title": "Run Id",
+        "type": "string"
+      },
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "queued",
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "basis_revision": {
+        "minimum": 0,
+        "title": "Basis Revision",
+        "type": "integer"
+      },
+      "basis_feedback_version": {
+        "minimum": 0,
+        "title": "Basis Feedback Version",
+        "type": "integer"
+      },
+      "used_feedback_ids": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "title": "Used Feedback Ids",
+        "type": "array"
+      },
+      "provider": {
+        "minLength": 1,
+        "title": "Provider",
+        "type": "string"
+      },
+      "needs_replan": {
+        "title": "Needs Replan",
+        "type": "boolean"
+      },
+      "delivery_state": {
+        "$ref": "#/$defs/DeliveryState"
+      }
+    },
+    "required": [
+      "task_id",
+      "run_id",
+      "command_id",
+      "status",
+      "basis_revision",
+      "basis_feedback_version",
+      "provider",
+      "needs_replan",
+      "delivery_state"
+    ],
+    "title": "RunReceipt",
+    "type": "object"
+  },
+  "NcFileView": {
+    "additionalProperties": false,
+    "properties": {
+      "file_id": {
+        "minLength": 1,
+        "title": "File Id",
+        "type": "string"
+      },
+      "filename": {
+        "minLength": 1,
+        "title": "Filename",
+        "type": "string"
+      },
+      "setup_id": {
+        "minLength": 1,
+        "title": "Setup Id",
+        "type": "string"
+      },
+      "sequence": {
+        "exclusiveMinimum": 0,
+        "title": "Sequence",
+        "type": "integer"
+      },
+      "encoding": {
+        "minLength": 1,
+        "title": "Encoding",
+        "type": "string"
+      },
+      "newline": {
+        "minLength": 1,
+        "title": "Newline",
+        "type": "string"
+      },
+      "sha256": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Sha256",
+        "type": "string"
+      },
+      "size_bytes": {
+        "title": "Size Bytes",
+        "type": "integer"
+      },
+      "text": {
+        "title": "Text",
+        "type": "string"
+      }
+    },
+    "required": [
+      "file_id",
+      "filename",
+      "setup_id",
+      "sequence",
+      "encoding",
+      "newline",
+      "sha256",
+      "size_bytes",
+      "text"
+    ],
+    "title": "NcFileView",
+    "type": "object"
+  },
+  "CreateTaskRequest": {
+    "$defs": {
+      "JsonValue": {}
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "minLength": 1,
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "payload": {
+        "additionalProperties": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "title": "Payload",
+        "type": "object"
+      },
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "schema_version",
+      "payload",
+      "command_id"
+    ],
+    "title": "CreateTaskRequest",
+    "type": "object"
+  },
+  "HumanReplanRequest": {
+    "$defs": {
+      "ParameterChange": {
+        "additionalProperties": false,
+        "properties": {
+          "operation_id": {
+            "minLength": 1,
+            "title": "Operation Id",
+            "type": "string"
+          },
+          "parameter_id": {
+            "minLength": 1,
+            "title": "Parameter Id",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "minLength": 1,
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation_id",
+          "parameter_id",
+          "value",
+          "unit"
+        ],
+        "title": "ParameterChange",
+        "type": "object"
+      },
+      "ParameterPatch": {
+        "additionalProperties": false,
+        "properties": {
+          "template_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Template Digest",
+            "type": "string"
+          },
+          "base_plan_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Base Plan Digest",
+            "type": "string"
+          },
+          "changes": {
+            "items": {
+              "$ref": "#/$defs/ParameterChange"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Changes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "template_digest",
+          "base_plan_digest",
+          "changes"
+        ],
+        "title": "ParameterPatch",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "parameter_patch": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ParameterPatch"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "base_revision": {
+        "minimum": 0,
+        "title": "Base Revision",
+        "type": "integer"
+      },
+      "expected_feedback_version": {
+        "minimum": 0,
+        "title": "Expected Feedback Version",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "command_id",
+      "base_revision",
+      "expected_feedback_version"
+    ],
+    "title": "HumanReplanRequest",
+    "type": "object"
+  },
+  "ReviewRequest": {
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "decision": {
+        "enum": [
+          "approve",
+          "reject"
+        ],
+        "title": "Decision",
+        "type": "string"
+      },
+      "expected_feedback_version": {
+        "minimum": 0,
+        "title": "Expected Feedback Version",
+        "type": "integer"
+      },
+      "comment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Comment"
+      }
+    },
+    "required": [
+      "command_id",
+      "decision",
+      "expected_feedback_version"
+    ],
+    "title": "ReviewRequest",
+    "type": "object"
+  },
+  "StartCamCommand": {
+    "$defs": {
+      "ApprovedPlanRef": {
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "result_id": {
+            "minLength": 1,
+            "title": "Result Id",
+            "type": "string"
+          },
+          "revision": {
+            "exclusiveMinimum": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "archive_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Archive Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "result_id",
+          "revision",
+          "archive_digest"
+        ],
+        "title": "ApprovedPlanRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "plan_ref": {
+        "$ref": "#/$defs/ApprovedPlanRef"
+      },
+      "execution_profile_id": {
+        "minLength": 1,
+        "title": "Execution Profile Id",
+        "type": "string"
+      },
+      "expected_current_revision": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Expected Current Revision"
+      }
+    },
+    "required": [
+      "command_id",
+      "plan_ref",
+      "execution_profile_id"
+    ],
+    "title": "StartCamCommand",
+    "type": "object"
+  },
+  "ReviewNcCommand": {
+    "$defs": {
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "minLength": 1,
+        "title": "Command Id",
+        "type": "string"
+      },
+      "nc_ref": {
+        "$ref": "#/$defs/NcVersionRef"
+      },
+      "decision": {
+        "enum": [
+          "approve",
+          "reject"
+        ],
+        "title": "Decision",
+        "type": "string"
+      },
+      "comment": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Comment"
+      }
+    },
+    "required": [
+      "command_id",
+      "nc_ref",
+      "decision"
+    ],
+    "title": "ReviewNcCommand",
+    "type": "object"
+  },
+  "CadParseCommand": {
+    "additionalProperties": false,
+    "properties": {
+      "command_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+        "title": "Command Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "command_id"
+    ],
+    "title": "CadParseCommand",
+    "type": "object"
+  },
+  "CamRunList": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "runs"
+    ],
+    "properties": {
+      "runs": {
+        "type": "array",
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "engineering_status": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending",
+                    "validated"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Engineering Status"
+            },
+            "cam_run_id": {
+              "minLength": 1,
+              "title": "Cam Run Id",
+              "type": "string"
+            },
+            "root_run_id": {
+              "minLength": 1,
+              "title": "Root Run Id",
+              "type": "string"
+            },
+            "plan_ref": {
+              "$ref": "#/$defs/ApprovedPlanRef"
+            },
+            "kind": {
+              "enum": [
+                "generate",
+                "revise"
+              ],
+              "title": "Kind",
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "accepted",
+                "running",
+                "awaiting_confirmation",
+                "succeeded",
+                "failed",
+                "cancelled"
+              ],
+              "title": "Status",
+              "type": "string"
+            },
+            "phase": {
+              "enum": [
+                "prepare",
+                "feedback",
+                "edit_nc",
+                "generate_code",
+                "build",
+                "execute",
+                "collect"
+              ],
+              "title": "Phase",
+              "type": "string"
+            },
+            "state_version": {
+              "exclusiveMinimum": 0,
+              "title": "State Version",
+              "type": "integer"
+            },
+            "outcome": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "candidate",
+                    "needs_plan_change"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Outcome"
+            },
+            "current_candidate": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/NcVersionRef"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ErrorDetail"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "reset_required": {
+              "title": "Reset Required",
+              "type": "boolean"
+            },
+            "explanation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Explanation"
+            },
+            "observation": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/HealthSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "control": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ControlSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "closeout": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/CloseoutSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "allowed_actions": {
+              "items": {
+                "enum": [
+                  "reconcile",
+                  "observe",
+                  "cancel",
+                  "closeout",
+                  "reset",
+                  "save",
+                  "review",
+                  "revise",
+                  "download"
+                ],
+                "type": "string"
+              },
+              "title": "Allowed Actions",
+              "type": "array"
+            },
+            "trace_id": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9_-]{1,64}$",
+              "title": "Trace Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "cam_run_id",
+            "root_run_id",
+            "plan_ref",
+            "kind",
+            "status",
+            "phase",
+            "state_version",
+            "reset_required",
+            "allowed_actions",
+            "trace_id"
+          ],
+          "title": "CamRunView",
+          "type": "object"
+        }
+      }
+    },
+    "$defs": {
+      "ApprovedPlanRef": {
+        "additionalProperties": false,
+        "properties": {
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "result_id": {
+            "minLength": 1,
+            "title": "Result Id",
+            "type": "string"
+          },
+          "revision": {
+            "exclusiveMinimum": 0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "archive_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Archive Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "result_id",
+          "revision",
+          "archive_digest"
+        ],
+        "title": "ApprovedPlanRef",
+        "type": "object"
+      },
+      "CloseoutSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "evidence_action": {
+            "enum": [
+              "cancel",
+              "reset"
+            ],
+            "title": "Evidence Action",
+            "type": "string"
+          },
+          "evidence_command_id": {
+            "minLength": 1,
+            "title": "Evidence Command Id",
+            "type": "string"
+          },
+          "operator_id": {
+            "minLength": 1,
+            "title": "Operator Id",
+            "type": "string"
+          },
+          "identity_source": {
+            "const": "declared",
+            "default": "declared",
+            "title": "Identity Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason",
+          "evidence_action",
+          "evidence_command_id",
+          "operator_id"
+        ],
+        "title": "CloseoutSummary",
+        "type": "object"
+      },
+      "ControlSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "cancel",
+              "reset"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "submitted",
+              "unknown",
+              "confirmed",
+              "rejected"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "status",
+          "observed_at"
+        ],
+        "title": "ControlSummary",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "description": "Serializable error with a strict nonnegative integer code.",
+        "properties": {
+          "code": {
+            "minimum": 0,
+            "title": "Code",
+            "type": "integer"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "HealthSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "availability": {
+            "enum": [
+              "observed",
+              "unavailable"
+            ],
+            "title": "Availability",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "enum": [
+                  "idle",
+                  "busy",
+                  "reset_required",
+                  "offline"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "State"
+          },
+          "executor_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Executor Id"
+          },
+          "active_run_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Active Run Id"
+          }
+        },
+        "required": [
+          "availability",
+          "observed_at"
+        ],
+        "title": "HealthSummary",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    }
+  },
+  "ConversationView": {
+    "$defs": {
+      "AgentContext": {
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "enum": [
+              "planning",
+              "review"
+            ],
+            "title": "Page",
+            "type": "string"
+          },
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revision"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Operation Id"
+          },
+          "nc_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/NcVersionRef"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "nc_lines": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/NcLineRange"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "page",
+          "task_id"
+        ],
+        "title": "AgentContext",
+        "type": "object"
+      },
+      "AgentErrorEvent": {
+        "additionalProperties": false,
+        "description": "Public code and fixed message only; never model text or upstream bodies.",
+        "properties": {
+          "type": {
+            "const": "error",
+            "default": "error",
+            "title": "Type",
+            "type": "string"
+          },
+          "code": {
+            "exclusiveMinimum": 0,
+            "title": "Code",
+            "type": "integer"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "AgentErrorEvent",
+        "type": "object"
+      },
+      "Citation": {
+        "additionalProperties": false,
+        "description": "Points at a value returned by a tool call; the server checks it exists.",
+        "properties": {
+          "tool_call_id": {
+            "minLength": 1,
+            "title": "Tool Call Id",
+            "type": "string"
+          },
+          "resource": {
+            "minLength": 1,
+            "title": "Resource",
+            "type": "string"
+          },
+          "pointer": {
+            "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+            "title": "Pointer",
+            "type": "string"
+          },
+          "value": {
+            "maxLength": 500,
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool_call_id",
+          "resource",
+          "pointer",
+          "value"
+        ],
+        "title": "Citation",
+        "type": "object"
+      },
+      "MessageCompleted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "message.completed",
+            "default": "message.completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/$defs/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "dropped_citations": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Dropped Citations",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "MessageCompleted",
+        "type": "object"
+      },
+      "NcLineRange": {
+        "additionalProperties": false,
+        "properties": {
+          "file_id": {
+            "minLength": 1,
+            "title": "File Id",
+            "type": "string"
+          },
+          "start": {
+            "exclusiveMinimum": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "end": {
+            "exclusiveMinimum": 0,
+            "title": "End",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "file_id",
+          "start",
+          "end"
+        ],
+        "title": "NcLineRange",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      },
+      "ToolCompleted": {
+        "additionalProperties": false,
+        "description": "no_record: the resource is absent; rejected: arguments failed local checks.",
+        "properties": {
+          "type": {
+            "const": "tool.completed",
+            "default": "tool.completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_call_id": {
+            "minLength": 1,
+            "title": "Tool Call Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "no_record",
+              "rejected",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "duration_ms": {
+            "minimum": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          }
+        },
+        "required": [
+          "tool_call_id",
+          "status",
+          "summary",
+          "duration_ms"
+        ],
+        "title": "ToolCompleted",
+        "type": "object"
+      },
+      "ToolStarted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "tool.started",
+            "default": "tool.started",
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_call_id": {
+            "minLength": 1,
+            "title": "Tool Call Id",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool_call_id",
+          "name",
+          "summary"
+        ],
+        "title": "ToolStarted",
+        "type": "object"
+      },
+      "TurnCompleted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "turn.completed",
+            "default": "turn.completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "turn_id": {
+            "minLength": 1,
+            "title": "Turn Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "completed",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/$defs/TurnUsage"
+          }
+        },
+        "required": [
+          "turn_id",
+          "status",
+          "usage"
+        ],
+        "title": "TurnCompleted",
+        "type": "object"
+      },
+      "TurnStarted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "turn.started",
+            "default": "turn.started",
+            "title": "Type",
+            "type": "string"
+          },
+          "turn_id": {
+            "minLength": 1,
+            "title": "Turn Id",
+            "type": "string"
+          },
+          "message_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Message Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "turn_id",
+          "message_id"
+        ],
+        "title": "TurnStarted",
+        "type": "object"
+      },
+      "TurnUsage": {
+        "additionalProperties": false,
+        "properties": {
+          "model_calls": {
+            "minimum": 0,
+            "title": "Model Calls",
+            "type": "integer"
+          },
+          "tool_calls": {
+            "minimum": 0,
+            "title": "Tool Calls",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "model_calls",
+          "tool_calls"
+        ],
+        "title": "TurnUsage",
+        "type": "object"
+      },
+      "TurnView": {
+        "additionalProperties": false,
+        "description": "A stored turn; an in-progress turn has no turn.completed yet.",
+        "properties": {
+          "turn_id": {
+            "minLength": 1,
+            "title": "Turn Id",
+            "type": "string"
+          },
+          "message_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Message Id",
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "context": {
+            "$ref": "#/$defs/AgentContext"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "events": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "error": "#/$defs/AgentErrorEvent",
+                  "message.completed": "#/$defs/MessageCompleted",
+                  "tool.completed": "#/$defs/ToolCompleted",
+                  "tool.started": "#/$defs/ToolStarted",
+                  "turn.completed": "#/$defs/TurnCompleted",
+                  "turn.started": "#/$defs/TurnStarted"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TurnStarted"
+                },
+                {
+                  "$ref": "#/$defs/ToolStarted"
+                },
+                {
+                  "$ref": "#/$defs/ToolCompleted"
+                },
+                {
+                  "$ref": "#/$defs/MessageCompleted"
+                },
+                {
+                  "$ref": "#/$defs/AgentErrorEvent"
+                },
+                {
+                  "$ref": "#/$defs/TurnCompleted"
+                }
+              ]
+            },
+            "minItems": 1,
+            "title": "Events",
+            "type": "array"
+          }
+        },
+        "required": [
+          "turn_id",
+          "message_id",
+          "text",
+          "context",
+          "created_at",
+          "events"
+        ],
+        "title": "TurnView",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "conversation_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "title": "Conversation Id",
+        "type": "string"
+      },
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      },
+      "created_at": {
+        "format": "date-time",
+        "title": "Created At",
+        "type": "string"
+      },
+      "turns": {
+        "items": {
+          "$ref": "#/$defs/TurnView"
+        },
+        "title": "Turns",
+        "type": "array"
+      }
+    },
+    "required": [
+      "conversation_id",
+      "task_id",
+      "created_at"
+    ],
+    "title": "ConversationView",
+    "type": "object"
+  },
+  "TurnResponse": {
+    "$defs": {
+      "AgentErrorEvent": {
+        "additionalProperties": false,
+        "description": "Public code and fixed message only; never model text or upstream bodies.",
+        "properties": {
+          "type": {
+            "const": "error",
+            "default": "error",
+            "title": "Type",
+            "type": "string"
+          },
+          "code": {
+            "exclusiveMinimum": 0,
+            "title": "Code",
+            "type": "integer"
+          },
+          "message": {
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "AgentErrorEvent",
+        "type": "object"
+      },
+      "Citation": {
+        "additionalProperties": false,
+        "description": "Points at a value returned by a tool call; the server checks it exists.",
+        "properties": {
+          "tool_call_id": {
+            "minLength": 1,
+            "title": "Tool Call Id",
+            "type": "string"
+          },
+          "resource": {
+            "minLength": 1,
+            "title": "Resource",
+            "type": "string"
+          },
+          "pointer": {
+            "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+            "title": "Pointer",
+            "type": "string"
+          },
+          "value": {
+            "maxLength": 500,
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool_call_id",
+          "resource",
+          "pointer",
+          "value"
+        ],
+        "title": "Citation",
+        "type": "object"
+      },
+      "MessageCompleted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "message.completed",
+            "default": "message.completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/$defs/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "dropped_citations": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Dropped Citations",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "MessageCompleted",
+        "type": "object"
+      },
+      "ToolCompleted": {
+        "additionalProperties": false,
+        "description": "no_record: the resource is absent; rejected: arguments failed local checks.",
+        "properties": {
+          "type": {
+            "const": "tool.completed",
+            "default": "tool.completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_call_id": {
+            "minLength": 1,
+            "title": "Tool Call Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "no_record",
+              "rejected",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "duration_ms": {
+            "minimum": 0,
+            "title": "Duration Ms",
+            "type": "number"
+          }
+        },
+        "required": [
+          "tool_call_id",
+          "status",
+          "summary",
+          "duration_ms"
+        ],
+        "title": "ToolCompleted",
+        "type": "object"
+      },
+      "ToolStarted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "tool.started",
+            "default": "tool.started",
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_call_id": {
+            "minLength": 1,
+            "title": "Tool Call Id",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tool_call_id",
+          "name",
+          "summary"
+        ],
+        "title": "ToolStarted",
+        "type": "object"
+      },
+      "TurnCompleted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "turn.completed",
+            "default": "turn.completed",
+            "title": "Type",
+            "type": "string"
+          },
+          "turn_id": {
+            "minLength": 1,
+            "title": "Turn Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "completed",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/$defs/TurnUsage"
+          }
+        },
+        "required": [
+          "turn_id",
+          "status",
+          "usage"
+        ],
+        "title": "TurnCompleted",
+        "type": "object"
+      },
+      "TurnStarted": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "turn.started",
+            "default": "turn.started",
+            "title": "Type",
+            "type": "string"
+          },
+          "turn_id": {
+            "minLength": 1,
+            "title": "Turn Id",
+            "type": "string"
+          },
+          "message_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Message Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "turn_id",
+          "message_id"
+        ],
+        "title": "TurnStarted",
+        "type": "object"
+      },
+      "TurnUsage": {
+        "additionalProperties": false,
+        "properties": {
+          "model_calls": {
+            "minimum": 0,
+            "title": "Model Calls",
+            "type": "integer"
+          },
+          "tool_calls": {
+            "minimum": 0,
+            "title": "Tool Calls",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "model_calls",
+          "tool_calls"
+        ],
+        "title": "TurnUsage",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "conversation_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "title": "Conversation Id",
+        "type": "string"
+      },
+      "turn_id": {
+        "minLength": 1,
+        "title": "Turn Id",
+        "type": "string"
+      },
+      "events": {
+        "items": {
+          "discriminator": {
+            "mapping": {
+              "error": "#/$defs/AgentErrorEvent",
+              "message.completed": "#/$defs/MessageCompleted",
+              "tool.completed": "#/$defs/ToolCompleted",
+              "tool.started": "#/$defs/ToolStarted",
+              "turn.completed": "#/$defs/TurnCompleted",
+              "turn.started": "#/$defs/TurnStarted"
+            },
+            "propertyName": "type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TurnStarted"
+            },
+            {
+              "$ref": "#/$defs/ToolStarted"
+            },
+            {
+              "$ref": "#/$defs/ToolCompleted"
+            },
+            {
+              "$ref": "#/$defs/MessageCompleted"
+            },
+            {
+              "$ref": "#/$defs/AgentErrorEvent"
+            },
+            {
+              "$ref": "#/$defs/TurnCompleted"
+            }
+          ]
+        },
+        "minItems": 2,
+        "title": "Events",
+        "type": "array"
+      }
+    },
+    "required": [
+      "conversation_id",
+      "turn_id",
+      "events"
+    ],
+    "title": "TurnResponse",
+    "type": "object"
+  },
+  "CreateConversationRequest": {
+    "additionalProperties": false,
+    "properties": {
+      "conversation_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "title": "Conversation Id",
+        "type": "string"
+      },
+      "task_id": {
+        "minLength": 1,
+        "title": "Task Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "conversation_id",
+      "task_id"
+    ],
+    "title": "CreateConversationRequest",
+    "type": "object"
+  },
+  "SendMessageRequest": {
+    "$defs": {
+      "AgentContext": {
+        "additionalProperties": false,
+        "properties": {
+          "page": {
+            "enum": [
+              "planning",
+              "review"
+            ],
+            "title": "Page",
+            "type": "string"
+          },
+          "task_id": {
+            "minLength": 1,
+            "title": "Task Id",
+            "type": "string"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revision"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Operation Id"
+          },
+          "nc_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/NcVersionRef"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "nc_lines": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/NcLineRange"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "page",
+          "task_id"
+        ],
+        "title": "AgentContext",
+        "type": "object"
+      },
+      "NcLineRange": {
+        "additionalProperties": false,
+        "properties": {
+          "file_id": {
+            "minLength": 1,
+            "title": "File Id",
+            "type": "string"
+          },
+          "start": {
+            "exclusiveMinimum": 0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "end": {
+            "exclusiveMinimum": 0,
+            "title": "End",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "file_id",
+          "start",
+          "end"
+        ],
+        "title": "NcLineRange",
+        "type": "object"
+      },
+      "NcVersionRef": {
+        "additionalProperties": false,
+        "properties": {
+          "cam_run_id": {
+            "minLength": 1,
+            "title": "Cam Run Id",
+            "type": "string"
+          },
+          "version": {
+            "exclusiveMinimum": 0,
+            "title": "Version",
+            "type": "integer"
+          },
+          "content_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Content Digest",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cam_run_id",
+          "version",
+          "content_digest"
+        ],
+        "title": "NcVersionRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "message_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "title": "Message Id",
+        "type": "string"
+      },
+      "text": {
+        "maxLength": 2000,
+        "minLength": 1,
+        "title": "Text",
+        "type": "string"
+      },
+      "context": {
+        "$ref": "#/$defs/AgentContext"
+      }
+    },
+    "required": [
+      "message_id",
+      "text",
+      "context"
+    ],
+    "title": "SendMessageRequest",
+    "type": "object"
+  }
+}

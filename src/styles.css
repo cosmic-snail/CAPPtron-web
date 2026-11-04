@@ -200,6 +200,7 @@ button:focus-visible {
   border-radius: var(--radius-panel);
 }
 .model-input-page {
+  position: relative;
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
@@ -221,7 +222,7 @@ button:focus-visible {
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) minmax(300px, 1fr);
   gap: 48px;
-  margin-top: 40px;
+  margin-top: 0;
   flex: 1;
   max-height: 520px;
 }
@@ -384,7 +385,7 @@ button:focus-visible {
   .model-input-columns {
     grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr);
     gap: 36px;
-    margin-top: 32px;
+    margin-top: 0;
   }
   .file-summary {
     flex-wrap: wrap;
@@ -455,4 +456,140 @@ button:focus-visible {
   .button {
     transition: none;
   }
+}
+
+.core-mode-switch {
+  display: flex;
+  gap: 16px;
+  padding: 10px 24px;
+  align-items: center;
+}
+.core-workspace {
+  padding: 24px;
+  overflow: auto;
+  min-height: 0;
+}
+.core-workspace fieldset {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #ccd5dc;
+}
+.core-workspace button,
+.core-workspace input {
+  margin: 6px;
+  padding: 8px;
+}
+.core-workspace pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 360px;
+  overflow: auto;
+  background: var(--surface-panel);
+  padding: 12px;
+}
+
+.live-shell .app-main {
+  display: block;
+  padding: 16px;
+}
+
+.core-workspace button {
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--surface-panel);
+  cursor: pointer;
+}
+.core-workspace button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.core-workspace input:not([type='file']) {
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: var(--surface-panel);
+}
+
+/* 恢复入口使用独立浮层，展开表单不拉伸模型输入页。 */
+.input-preparation-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.simulation-scenario {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+.simulation-scenario select {
+  min-height: 36px;
+  padding: 6px 12px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-panel);
+  font: inherit;
+}
+.input-restore {
+  position: relative;
+}
+.input-restore > summary {
+  cursor: pointer;
+  color: var(--accent-primary);
+  font-size: 13px;
+  line-height: 20px;
+}
+.input-restore-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 20;
+  width: min(420px, 80vw);
+  max-height: 65vh;
+  overflow: auto;
+  padding: 20px;
+  background: var(--surface-canvas);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-panel);
+}
+.input-restore-panel fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.input-restore-panel fieldset + fieldset {
+  margin-top: 24px;
+}
+.input-restore-panel legend {
+  color: var(--accent-primary);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.input-restore-panel label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+.input-restore-panel input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-panel);
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  font: inherit;
+  padding: 8px 12px;
+}
+.input-restore-panel input:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+}
+.input-restore-panel .button {
+  justify-self: end;
 }

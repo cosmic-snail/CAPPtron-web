@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { ParameterFields } from './ParameterFields'
 import type { Parameter } from './processPlan'
@@ -37,4 +37,49 @@ describe('参数来源显示', () => {
     expect(screen.getByText('m/min')).toBeVisible()
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
   })
+})
+
+it('配置通过选择确认，只有需要修改时展开必填参数', () => {
+  const parameters: Parameter[] = [
+    {
+      id: 'fixture-mode',
+      name: '装夹配置',
+      inputKind: 'choice',
+      value: 'unknown',
+      source: 'template',
+      status: 'pending',
+      editable: true,
+      choices: [
+        { value: 'unknown', label: '尚未确认' },
+        { value: 'inherit', label: '沿用当前配置' },
+        { value: 'change', label: '需要修改' },
+      ],
+    },
+    {
+      id: 'grip-length',
+      name: '夹持长度',
+      inputKind: 'number',
+      value: null,
+      source: 'unknown',
+      status: 'missing',
+      editable: true,
+      when: 'fixture-mode',
+    },
+  ]
+  let selected = ''
+  const props = {
+    parameters,
+    operationId: 't',
+    section: 'task',
+    emptyText: '',
+    onDraft: (_key: string, value: string) => {
+      selected = value
+    },
+  }
+  const view = render(<ParameterFields {...props} drafts={{}} />)
+  expect(screen.queryByLabelText('夹持长度')).not.toBeInTheDocument()
+  fireEvent.change(screen.getByLabelText('装夹配置'), { target: { value: 'change' } })
+  expect(selected).toBe('change')
+  view.rerender(<ParameterFields {...props} drafts={{ '["t","task","fixture-mode"]': 'change' }} />)
+  expect(screen.getByLabelText('夹持长度')).toHaveAttribute('aria-required', 'true')
 })

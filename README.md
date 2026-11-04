@@ -2,7 +2,11 @@
 
 CAPPtron CNC Agentic Programming 项目的 Web 前端，技术基础为 **React + TypeScript + Vite**。
 
-**本分支已实现：FE-001 模型输入、FE-002 工艺决策与 Agent 演示、FE-003 程序编辑与审核、FE-004A 数据契约和 FE-004B 数据底座大屏。** 大屏等待维护者视觉验收；文件解读页面尚未实现。当前可独立运行前端 Demo，无需启动后端、数据库或 Mastercam；不提供真实 STEP 解析、Agent 调用、CAM 或 NC 生成。文件选择、现场草稿和编辑会话保存在浏览器内存中，刷新后重置。业务设计基准与实施边界见 [前端架构说明](docs/architecture/frontend-architecture.md)。
+当前稳定入口为 **main**。2026-10-27，维护者完成 PR #35 合入版本 `b0c4e349cfef1e85e9496941d4a0594abf7a6879` 的人工视觉确认，作为当前 UI 基线。后续接口接入与修复应保持该布局、字号、信息密度和局部滚动体验；界面变更需维护者明确授权并重新验收。
+
+当前支持三个入口：原型/历史案例、真实 Core 联调、`/?mode=simulation` 本地 JSON 模拟。真实与模拟复用三阶段页面；模拟可独立体验输入、规划、参数修订、审核人、CAM 状态及 NC 审核，不连接 NX 或 Mastercam。真实模式依赖受控部署配置和 Core 服务，不会自动回退模拟。模拟任务、恢复日志及 NC 本地草稿可持久保存；原型演示会话仍主要保存在内存中。真实模式下 Agent 抽屉连接 Core 只读对话 Agent（Core 需开启 `CAPPTRON_AGENT_ENABLED`，见 [Agent 抽屉接入](docs/api/Agent-Drawer-Live.md)）；原型与模拟模式仍为固定说明。文件解读页面和数据底座真实 Reader 尚未接入。
+
+当前界面与证据入口见 [UI 基线](docs/workflows/UI-BASELINE.md)，真实接入见 [Golden 配置与恢复](docs/api/Golden-demo-integration-20261025.md)，模拟使用见 [模拟流程说明](docs/api/Simulation-Acceptance.md)。
 
 ## 设计与相关仓库
 
@@ -16,12 +20,12 @@ CAPPtron CNC Agentic Programming 项目的 Web 前端，技术基础为 **React 
 
 ## Quick Start｜快速启动
 
-准备 **Git、Node.js 22.12+ 和 npm**；推荐使用与 `.nvmrc` / CI 一致的 Node.js 22.x。体验当前开发功能请使用 `develop/r06-ui`，`main` 为稳定集成分支。
+准备 **Git、Node.js 22.12+ 和 npm**；推荐使用与 `.nvmrc` / CI 一致的 Node.js 22.x。体验已验收版本请使用 `main`。
 
 ### 首次获取并启动
 
 ```bash
-git clone --branch develop/r06-ui https://github.com/James-FE/CAPPtron-web.git
+git clone --branch main https://github.com/James-FE/CAPPtron-web.git
 cd CAPPtron-web
 npm ci
 npm run dev
@@ -100,7 +104,7 @@ Playwright 会通过 `webServer` 自动以 `e2e` 模式启动独立的 `127.0.0.
 - 初始、本地文件、Demo 三种状态的真实截图作为附件出现在 `playwright-report/index.html`，原始 PNG 位于 `test-results/` 各视口目录，分别名为 `model-input-empty.png`、`model-input-local.png`、`model-input-demo.png`。
 - 失败时可查看错误、截图与 `trace.zip`；使用 `npx playwright show-trace <trace.zip的实际路径>` 调试。
 - GitHub PR 的 **Quality / Chromium E2E** Job 会上传 `playwright-results` Artifact（保留 14 天）。下载、解压后可用 `npx playwright show-report <解压后playwright-report目录>` 查看。
-- 当前截图是**运行证据，不是已批准的视觉回归基准**。只有页面对照 Figma 并经人工验收后，才建立 `toHaveScreenshot` 基准。
+- 当前人工确认的基线与截图清单见 [UI 基线](docs/workflows/UI-BASELINE.md)。历史运行截图不自动成为当前基线；尚未建立 `toHaveScreenshot` 像素快照断言。
 
 FE-001 的设计来源与组件边界见 [FE-001 验收说明](docs/workflows/FE-001-ACCEPTANCE.md)。现有 `planning.spec.ts`、`case-catalog.spec.ts`、`program-review.spec.ts` 还覆盖动态工序、现场草稿、Agent、案例读取和程序编辑审核；程序来源与使用限制见 [FE-003 验收说明](docs/workflows/FE-003-ACCEPTANCE.md)，数据读取契约见 [数据底座 v1](docs/architecture/data-foundation-v1.md)。
 
@@ -112,7 +116,7 @@ FE-001 的设计来源与组件边界见 [FE-001 验收说明](docs/workflows/FE
 - `.github/workflows/package.yml`：`main` Push 或手动触发时打包并上传 `dist/`（保留 30 天）。
 - `.github/rulesets/main.json`：目标分支保护策略；**提交 JSON 本身不会使远程规则自动生效**。
 - `AGENTS.md`：Codex 开发与审查规则；**仓库中存在审查规则不意味着云端自动 Code Review 已启用**。
-- 前端功能优先在独立 `feat/*` 分支开发，PR 提交至 `develop/r06-ui`；未经维护者明确批准不得合并至 `main`。
+- 从最新 `main` 创建短期功能分支，PR 提交至 `main`；未经维护者明确批准不得合并至 `main`。
 
 详见 [贡献指南](CONTRIBUTING.md)、[GitHub 配置与分支保护](docs/workflows/GITHUB_SETUP.md)、[Codex 审查配置](docs/workflows/CODE_REVIEW.md) 以及 [测试说明](docs/workflows/TESTING.md)。
 

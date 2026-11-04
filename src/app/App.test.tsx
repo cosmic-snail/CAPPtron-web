@@ -22,7 +22,7 @@ function preparation() {
 describe('r06 模型输入', () => {
   it('初始状态未选择文件，待接入能力不会被标记为完成', () => {
     render(<App />)
-    expect(screen.getByRole('heading', { name: '模型输入' })).toBeVisible()
+    expect(screen.getByRole('region', { name: '模型输入' })).toBeVisible()
     expect(fileBar().getByText('尚未选择模型文件 / 示例仅演示输入状态')).toBeVisible()
     expect(preparation().getByText('待选择')).toBeVisible()
     expect(preparation().getByText('待提供')).toBeVisible()
@@ -92,7 +92,7 @@ describe('r06 模型输入', () => {
     fireEvent.click(screen.getByRole('button', { name: '使用示例 Ring_A.step' }))
     await act(async () => {})
     expect(fileBar().getByText('Demo · 示例元数据')).toBeVisible()
-    expect(screen.getByRole('heading', { name: '工艺决策' })).toBeVisible()
+    expect(screen.getByRole('region', { name: '工艺决策' })).toBeVisible()
     expect(screen.getByRole('button', { name: '02 工艺决策' })).toHaveAttribute(
       'aria-current',
       'step',

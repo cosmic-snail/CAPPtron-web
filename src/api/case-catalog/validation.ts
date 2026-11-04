@@ -1,4 +1,5 @@
 import Ajv from 'ajv'
+import { sha256Hex } from '../browserCrypto'
 import documentSchema from './schema/case-document.schema.json'
 import indexSchema from './schema/case-index.schema.json'
 import type { CaseDocument, CaseField, CaseIndex, CaseSummary } from './types'
@@ -114,10 +115,7 @@ export function canonicalJson(value: unknown): string {
 export async function calculateContentDigest(document: CaseDocument): Promise<string> {
   const payload = { ...document } as Partial<CaseDocument>
   delete payload.contentDigest
-  if (!globalThis.crypto?.subtle) throw new Error('摘要校验需要 HTTPS 或 localhost 安全上下文')
-  const bytes = new TextEncoder().encode(canonicalJson(payload))
-  const hash = await crypto.subtle.digest('SHA-256', bytes)
-  return Array.from(new Uint8Array(hash), (byte) => byte.toString(16).padStart(2, '0')).join('')
+  return sha256Hex(new TextEncoder().encode(canonicalJson(payload)))
 }
 
 export async function verifyCaseVersion(value: unknown, summary: CaseSummary, version: string) {

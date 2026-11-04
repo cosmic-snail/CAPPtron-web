@@ -16,9 +16,11 @@ const externalChange = Annotation.define<boolean>()
 export function ProgramEditor({
   document,
   onChange,
+  readOnly = false,
 }: {
-  document: ProgramDocument
+  document: Pick<ProgramDocument, 'id' | 'draftText' | 'revision'>
   onChange: (text: string, revision: number) => void
+  readOnly?: boolean
 }) {
   const host = useRef<HTMLDivElement>(null)
   const view = useRef<EditorView | null>(null)
@@ -39,6 +41,8 @@ export function ProgramEditor({
       state: EditorState.create({
         doc: latest.current.document.draftText,
         extensions: [
+          EditorState.readOnly.of(readOnly),
+          EditorView.editable.of(!readOnly),
           lineNumbers(),
           history(),
           keymap.of([
@@ -87,7 +91,7 @@ export function ProgramEditor({
       editor.destroy()
       view.current = null
     }
-  }, [document.id])
+  }, [document.id, readOnly])
   useLayoutEffect(() => {
     const editor = view.current
     if (editor && editor.state.doc.toString() !== document.draftText)
@@ -101,7 +105,7 @@ export function ProgramEditor({
       <div className="editor-commands">
         <button
           className="button"
-          disabled={!historyAvailable.undo}
+          disabled={readOnly || !historyAvailable.undo}
           title={historyAvailable.undo ? '撤回上一次代码修改' : '暂无可撤销的修改'}
           onClick={() => {
             if (view.current) {
@@ -114,7 +118,7 @@ export function ProgramEditor({
         </button>
         <button
           className="button"
-          disabled={!historyAvailable.redo}
+          disabled={readOnly || !historyAvailable.redo}
           title={
             historyAvailable.redo
               ? '重新应用刚才撤销的代码修改'
@@ -130,7 +134,9 @@ export function ProgramEditor({
           恢复已撤销
         </button>
         <span className="muted-text">
-          Ctrl / ⌘ Z 撤销修改 · Ctrl / ⌘ Shift Z 恢复已撤销 · 不自动折行
+          {readOnly
+            ? 'Core 原始正文 · 只读 · 不自动折行'
+            : 'Ctrl / ⌘ Z 撤销修改 · Ctrl / ⌘ Shift Z 恢复已撤销 · 不自动折行'}
         </span>
       </div>
       <div className="program-editor" ref={host} />

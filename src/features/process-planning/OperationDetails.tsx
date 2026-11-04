@@ -27,6 +27,14 @@ export function OperationDetails({
           {String(operation.sequence).padStart(2, '0')} {operation.name}
         </h3>
         <p className="muted-text">来源：{operation.source}</p>
+        {plan.engineeringStatus && (
+          <p className="warning-text">
+            工程状态 {plan.engineeringStatus}。工艺卡批准或 CAM 完成不代表制造验收通过。
+          </p>
+        )}
+        {plan.parametersFrozen && (
+          <p className="muted-text">参数规则为空：模板已冻结。下列参数只读，不能编辑。</p>
+        )}
         <div className="detail-switch" role="group" aria-label="工序详情视图">
           {(
             [
@@ -58,7 +66,14 @@ export function OperationDetails({
           <>
             <section>
               <h4>装夹与定位</h4>
-              <p>{operation.setup ?? '暂无装夹与定位说明'}</p>
+              {operation.setupId && <p>装夹 {operation.setupId}</p>}
+              <p>
+                {operation.setup && operation.setup !== '未提供'
+                  ? operation.setup
+                  : operation.setupId
+                    ? '装夹说明未另行提供。'
+                    : '暂无装夹与定位说明'}
+              </p>
             </section>
             <section>
               <h4>加工内容 · {operation.steps.length} 个工步</h4>
@@ -84,8 +99,8 @@ export function OperationDetails({
               <h4>补充信息与说明</h4>
               {!!plan.taskMeasurements?.length && (
                 <p className="muted-text">
-                  另有 {plan.taskMeasurements.length}{' '}
-                  项任务共用现场信息，请从左侧“任务共用信息”集中填写。
+                  另有 {plan.taskMeasurements.length} 项任务共用现场信息，请从
+                  左侧“任务共用信息”集中填写。
                 </p>
               )}
               <p className="warning-text">
@@ -100,9 +115,18 @@ export function OperationDetails({
         {view === 'resources' && (
           <>
             <section>
-              <h4>工艺参数 · Mock 演示</h4>
+              <h4>
+                工艺参数 ·{' '}
+                {plan.simulation
+                  ? '本地模拟'
+                  : plan.origin === 'live'
+                    ? 'Core 实际结果'
+                    : 'Mock 演示'}
+              </h4>
               <p className="muted-text">
-                预设或基线记录，来源见字段；未执行本次参数推荐或 CAM 仿真。
+                {plan.origin === 'live'
+                  ? '当前 revision 参数，来源与单位见字段；草稿提交后才产生新修订。'
+                  : '预设或基线记录，来源见字段；未执行本次参数推荐或 CAM 仿真。'}
               </p>
               <div
                 className="parameter-scroll"
@@ -119,8 +143,15 @@ export function OperationDetails({
               </div>
             </section>
             <section>
-              <h4>生产资源 · Mock 演示</h4>
-              {!operation.resources.length && <p className="muted-text">暂无生产资源信息</p>}
+              <h4>
+                生产资源 ·{' '}
+                {plan.simulation ? '本地模拟' : plan.origin === 'live' ? 'Core' : 'Mock 演示'}
+              </h4>
+              {!operation.resources.length && (
+                <p className="muted-text">
+                  {plan.origin === 'live' ? '未提供' : '暂无生产资源信息'}
+                </p>
+              )}
               <ul className="resource-list">
                 {operation.resources.map((resource) => (
                   <li key={resource.id}>
@@ -149,10 +180,16 @@ export function OperationDetails({
           <>
             <section>
               <h4>加工要求与现场信息</h4>
-              <p className="warning-text">本地演示草稿，未提交服务器，未完成制造校核。</p>
+              <p className="warning-text">
+                {plan.origin === 'live'
+                  ? '现场信息可填写并提交记录；未应用到 CAM，未完成制造校核。'
+                  : '本地演示草稿，未提交服务器，未完成制造校核。'}
+              </p>
               {!!plan.taskMeasurements?.length && (
                 <p className="muted-text">
-                  共用字段已集中到左侧“任务共用信息”，本页只展示当前工序专用信息。
+                  {plan.origin === 'live'
+                    ? '共用字段请在左侧“任务共用信息”填写，本页只展示当前工序专用信息。'
+                    : '共用字段已集中到左侧“任务共用信息”，本页只展示当前工序专用信息。'}
                 </p>
               )}
             </section>

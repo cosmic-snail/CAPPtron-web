@@ -1,0 +1,797 @@
+{
+  "deployment": {
+    "schema_version": "golden-deployment-v1",
+    "source": "Pydantic validated test fixture; not a deployed Core",
+    "template": {
+      "id": "golden-b7",
+      "version": "2.3.0",
+      "digest": "6dbc61c6e11583db52a5ef60c58305df4032837e9f0f72e212110545ae44e861"
+    },
+    "execution_profile_digest": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+    "engineering_binding_configured": true
+  },
+  "asset": {
+    "command_id": "upload-1",
+    "filename": "Golden.step",
+    "asset_id": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "size_bytes": 12,
+    "status": "not_parsed",
+    "format": "step",
+    "created_at": "2026-10-23T08:00:00Z"
+  },
+  "parse": {
+    "command_id": "parse-1",
+    "asset_id": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "source_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "status": "parsed",
+    "report_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "nx_report": null,
+    "analysis": null,
+    "script_sha256": {},
+    "diagnostic": null,
+    "execution_ready": false
+  },
+  "task": {
+    "task_id": "task/Golden-中文",
+    "result_id": "result-1",
+    "trace_id": "trace-1",
+    "source_request_id": "source-1",
+    "current_revision": 1,
+    "feedback_version": 0,
+    "provider": "template"
+  },
+  "run": {
+    "task_id": "task/Golden-中文",
+    "run_id": "planning-1",
+    "command_id": "plan-1",
+    "status": "completed",
+    "basis_revision": 0,
+    "basis_feedback_version": 0,
+    "used_feedback_ids": [],
+    "provider": "template",
+    "needs_replan": false,
+    "delivery_state": {
+      "consumer": "delivered",
+      "frontend": "available"
+    },
+    "reason": null,
+    "repair_chain_id": null,
+    "repair_attempt": null,
+    "output_revision": 1,
+    "execution_error": null,
+    "delivery_error": null
+  },
+  "plan": {
+    "schema_version": "template-plan-v1-integration",
+    "payload": {
+      "part": {
+        "name": "圆环 Ø41/Ø39×5 mm，切断侧外圆边 C0.2×45°",
+        "material": "2024"
+      },
+      "blank": {},
+      "resources": {},
+      "operations": [
+        {
+          "id": "ring-op-1",
+          "sequence": 1,
+          "name": "端面车削",
+          "steps": [
+            {
+              "id": "ring-step-1",
+              "sequence": 1,
+              "content": "端面车削",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-7",
+          "sequence": 2,
+          "name": "钻孔",
+          "steps": [
+            {
+              "id": "ring-step-7",
+              "sequence": 1,
+              "content": "复用固定 Golden 钻孔操作；几何与工程对应待确认。",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-2",
+          "sequence": 3,
+          "name": "外圆粗车",
+          "steps": [
+            {
+              "id": "ring-step-2",
+              "sequence": 1,
+              "content": "外圆粗车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {
+            "parameters": {
+              "rough_step": 0.5
+            },
+            "parameter_metadata": {
+              "rough_step": {
+                "name": "粗车参数 rough_step",
+                "unit": "mm",
+                "edit_policy": "replace",
+                "allowed_values": [0.5, 0.4],
+                "source": {
+                  "kind": "fixed_mastercam_manifest_extension",
+                  "resource_id": "golden-b7-parameter-profile",
+                  "sha256": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+                  "pointer": "/operations/1/before/parameters/rough_step",
+                  "engineering_status": "unconfirmed"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "ring-op-3",
+          "sequence": 4,
+          "name": "外圆精车",
+          "steps": [
+            {
+              "id": "ring-step-3",
+              "sequence": 1,
+              "content": "外圆精车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-4",
+          "sequence": 5,
+          "name": "内孔粗车",
+          "steps": [
+            {
+              "id": "ring-step-4",
+              "sequence": 1,
+              "content": "内孔粗车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-5",
+          "sequence": 6,
+          "name": "内孔精车",
+          "steps": [
+            {
+              "id": "ring-step-5",
+              "sequence": 1,
+              "content": "内孔精车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-6",
+          "sequence": 7,
+          "name": "切断",
+          "steps": [
+            {
+              "id": "ring-step-6-1",
+              "sequence": 1,
+              "content": "预切至基线 NC X39.5，保留连接料。",
+              "attributes": {}
+            },
+            {
+              "id": "ring-step-6-2",
+              "sequence": 2,
+              "content": "按基线刀路退刀。",
+              "attributes": {}
+            },
+            {
+              "id": "ring-step-6-chamfer",
+              "sequence": 3,
+              "content": "最终切断前，在切断侧外圆边加工 C0.2×45°；其余三条圆周棱边不在本次范围。",
+              "attributes": {}
+            },
+            {
+              "id": "ring-step-6-4",
+              "sequence": 4,
+              "content": "最终切至基线 NC X37.9，分离环件；X 为直径坐标。",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        }
+      ],
+      "extensions": {
+        "execution_profile_digest": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+        "parameter_rules": [
+          {
+            "path": "/operations/2/attributes/parameters/rough_step",
+            "value_type": "number",
+            "allowed_values": [0.5, 0.4],
+            "edit_policy": "replace",
+            "operation_id": "ring-op-2",
+            "parameter_id": "rough_step",
+            "unit": "mm"
+          }
+        ],
+        "template": {
+          "id": "golden-b7",
+          "version": "2.3.0",
+          "digest": "6dbc61c6e11583db52a5ef60c58305df4032837e9f0f72e212110545ae44e861"
+        },
+        "reference_only": false,
+        "execution_ready": true,
+        "plan_digest": "c55b0df286a65ec6307a104a9c9047d22894e826944a49c2828aca753962d76e",
+        "matching_evidence": {
+          "step_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "report_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mcam_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    "provider": "template",
+    "event_id": "event-1",
+    "task_id": "task/Golden-中文",
+    "result_id": "result-1",
+    "revision": 1,
+    "run_id": "planning-1",
+    "trace_id": "trace-1",
+    "source_request_id": "source-1",
+    "trigger_request_id": "request-1",
+    "feedback_snapshot": {
+      "feedback_version": 0,
+      "items": []
+    }
+  },
+  "card": {
+    "event_id": "event-1",
+    "task_id": "task/Golden-中文",
+    "result_id": "result-1",
+    "revision": 1,
+    "run_id": "planning-1",
+    "trace_id": "trace-1",
+    "source_request_id": "source-1",
+    "trigger_request_id": "request-1",
+    "expected_feedback_version": 0,
+    "basis_feedback_version": 0,
+    "status": "ready",
+    "template_id": "card-template",
+    "template_version": "2",
+    "template_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "report": {
+      "issues": [],
+      "total_count": 0,
+      "truncated": false,
+      "has_errors": false,
+      "has_nonrepairable_errors": false
+    },
+    "publication_state": "published",
+    "card": {
+      "identity": {
+        "event_id": "event-1",
+        "task_id": "task/Golden-中文",
+        "result_id": "result-1",
+        "revision": 1,
+        "run_id": "planning-1",
+        "trace_id": "trace-1",
+        "source_request_id": "source-1",
+        "trigger_request_id": "request-1",
+        "provider": "template",
+        "basis_feedback_version": 0
+      },
+      "template_id": "card-template",
+      "template_version": "2",
+      "template_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "profile_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "header": {
+        "name": "Golden contract fixture",
+        "model_code": null,
+        "document_number": null,
+        "material": null,
+        "quantity": null,
+        "blank_specification": null,
+        "blank_quantity": null,
+        "pieces_per_blank": null
+      },
+      "operations": [
+        {
+          "id": "ring-op-1",
+          "sequence": 1,
+          "name": "端面车削",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-1",
+              "sequence": 1,
+              "content": "端面车削",
+              "details": {}
+            }
+          ]
+        },
+        {
+          "id": "ring-op-7",
+          "sequence": 2,
+          "name": "钻孔",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-7",
+              "sequence": 1,
+              "content": "复用固定 Golden 钻孔操作；几何与工程对应待确认。",
+              "details": {}
+            }
+          ]
+        },
+        {
+          "id": "ring-op-2",
+          "sequence": 3,
+          "name": "外圆粗车",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-2",
+              "sequence": 1,
+              "content": "外圆粗车",
+              "details": {}
+            }
+          ]
+        },
+        {
+          "id": "ring-op-3",
+          "sequence": 4,
+          "name": "外圆精车",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-3",
+              "sequence": 1,
+              "content": "外圆精车",
+              "details": {}
+            }
+          ]
+        },
+        {
+          "id": "ring-op-4",
+          "sequence": 5,
+          "name": "内孔粗车",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-4",
+              "sequence": 1,
+              "content": "内孔粗车",
+              "details": {}
+            }
+          ]
+        },
+        {
+          "id": "ring-op-5",
+          "sequence": 6,
+          "name": "内孔精车",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-5",
+              "sequence": 1,
+              "content": "内孔精车",
+              "details": {}
+            }
+          ]
+        },
+        {
+          "id": "ring-op-6",
+          "sequence": 7,
+          "name": "切断",
+          "inspection_mode": null,
+          "resource_notes": null,
+          "steps": [
+            {
+              "id": "ring-step-6-1",
+              "sequence": 1,
+              "content": "预切至基线 NC X39.5，保留连接料。",
+              "details": {}
+            },
+            {
+              "id": "ring-step-6-2",
+              "sequence": 2,
+              "content": "按基线刀路退刀。",
+              "details": {}
+            },
+            {
+              "id": "ring-step-6-chamfer",
+              "sequence": 3,
+              "content": "最终切断前，在切断侧外圆边加工 C0.2×45°；其余三条圆周棱边不在本次范围。",
+              "details": {}
+            },
+            {
+              "id": "ring-step-6-4",
+              "sequence": 4,
+              "content": "最终切至基线 NC X37.9，分离环件；X 为直径坐标。",
+              "details": {}
+            }
+          ]
+        }
+      ]
+    },
+    "review": null
+  },
+  "approved": {
+    "execution_configured": true,
+    "execution_profile_id": "golden-test-profile",
+    "plans": [
+      {
+        "plan_ref": {
+          "task_id": "task/Golden-中文",
+          "result_id": "result-1",
+          "revision": 1,
+          "archive_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        "trace_id": "trace-1",
+        "archived_at": "2026-10-23T08:00:00Z",
+        "profile_matches": true
+      }
+    ]
+  },
+  "cam": {
+    "cam_run_id": "cam-1",
+    "root_run_id": "cam-1",
+    "plan_ref": {
+      "task_id": "task/Golden-中文",
+      "result_id": "result-1",
+      "revision": 1,
+      "archive_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "kind": "generate",
+    "status": "succeeded",
+    "phase": "collect",
+    "state_version": 1,
+    "outcome": null,
+    "current_candidate": {
+      "cam_run_id": "cam-1",
+      "version": 1,
+      "content_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "error": null,
+    "reset_required": false,
+    "explanation": null,
+    "observation": null,
+    "control": null,
+    "closeout": null,
+    "allowed_actions": [],
+    "trace_id": "trace-1"
+  },
+  "nc": {
+    "ref": {
+      "cam_run_id": "cam-1",
+      "version": 1,
+      "content_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "plan_ref": {
+      "task_id": "task/Golden-中文",
+      "result_id": "result-1",
+      "revision": 1,
+      "archive_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "origin": "cam_generated",
+    "parent": null,
+    "feedback_id": null,
+    "review_status": "pending",
+    "files": [
+      {
+        "file_id": "file-1",
+        "filename": "setup-1.nc",
+        "setup_id": "setup-1",
+        "sequence": 1,
+        "encoding": "utf-8",
+        "sha256": "31ed81b1e26cf4a5cdc0105116104bcdaf6fd37900edb420b222beeb02dd5921",
+        "size_bytes": 54
+      },
+      {
+        "file_id": "file-2",
+        "filename": "setup-2.nc",
+        "setup_id": "setup-2",
+        "sequence": 2,
+        "encoding": "utf-8",
+        "sha256": "adaf6624635df7a8605668bfc4b1a0791d302b0589e9c5c8e681e15fa7ca104f",
+        "size_bytes": 54
+      }
+    ],
+    "reviews": [],
+    "simulation_version": null,
+    "comparison_sha256": null,
+    "root_run_id": "cam-1",
+    "is_current_candidate": true,
+    "allowed_actions": ["review"]
+  },
+  "files": [
+    {
+      "file_id": "file-1",
+      "filename": "setup-1.nc",
+      "setup_id": "setup-1",
+      "sequence": 1,
+      "encoding": "utf-8",
+      "newline": "crlf",
+      "sha256": "31ed81b1e26cf4a5cdc0105116104bcdaf6fd37900edb420b222beeb02dd5921",
+      "size_bytes": 54,
+      "text": "(CONTRACT TEST ONLY - NOT MACHINING EVIDENCE 1)\r\nM30\r\n"
+    },
+    {
+      "file_id": "file-2",
+      "filename": "setup-2.nc",
+      "setup_id": "setup-2",
+      "sequence": 2,
+      "encoding": "utf-8",
+      "newline": "crlf",
+      "sha256": "adaf6624635df7a8605668bfc4b1a0791d302b0589e9c5c8e681e15fa7ca104f",
+      "size_bytes": 54,
+      "text": "(CONTRACT TEST ONLY - NOT MACHINING EVIDENCE 2)\r\nM30\r\n"
+    }
+  ],
+  "camReceipt": {
+    "command_id": "cam-command",
+    "context": {
+      "cam_run_id": "cam-1",
+      "request_id": "request-1",
+      "trace_id": "trace-1"
+    },
+    "kind": "generate",
+    "feedback_id": null,
+    "base": null
+  },
+  "cardReview": {
+    "task_id": "task/Golden-中文",
+    "result_id": "result-1",
+    "revision": 1,
+    "decision": "approve",
+    "archive_status": "archived",
+    "archive_id": "archive-1",
+    "trace_id": "trace-1",
+    "request_id": "request-1",
+    "reviewed_at": "2026-10-23T08:00:00Z"
+  },
+  "ncReview": {
+    "command_id": "nc-command",
+    "request_id": "request-1",
+    "identity_source": "declared",
+    "review": {
+      "nc_ref": {
+        "cam_run_id": "cam-1",
+        "version": 1,
+        "content_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "decision": "approve",
+      "reviewer_id": "test-reviewer",
+      "reviewed_at": "2026-10-23T08:00:00Z",
+      "comment": null
+    }
+  },
+  "error": {
+    "error": {
+      "code": 3000,
+      "message": "Contract test failure"
+    },
+    "request_id": "request-1",
+    "trace_id": "trace-1",
+    "issues": []
+  },
+  "plan2": {
+    "schema_version": "template-plan-v1-integration",
+    "payload": {
+      "part": {
+        "name": "圆环 Ø41/Ø39×5 mm，切断侧外圆边 C0.2×45°",
+        "material": "2024"
+      },
+      "blank": {},
+      "resources": {},
+      "operations": [
+        {
+          "id": "ring-op-1",
+          "sequence": 1,
+          "name": "端面车削",
+          "steps": [
+            {
+              "id": "ring-step-1",
+              "sequence": 1,
+              "content": "端面车削",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-7",
+          "sequence": 2,
+          "name": "钻孔",
+          "steps": [
+            {
+              "id": "ring-step-7",
+              "sequence": 1,
+              "content": "复用固定 Golden 钻孔操作；几何与工程对应待确认。",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-2",
+          "sequence": 3,
+          "name": "外圆粗车",
+          "steps": [
+            {
+              "id": "ring-step-2",
+              "sequence": 1,
+              "content": "外圆粗车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {
+            "parameters": {
+              "rough_step": 0.4
+            },
+            "parameter_metadata": {
+              "rough_step": {
+                "name": "粗车参数 rough_step",
+                "unit": "mm",
+                "edit_policy": "replace",
+                "allowed_values": [0.5, 0.4],
+                "source": {
+                  "kind": "fixed_mastercam_manifest_extension",
+                  "resource_id": "golden-b7-parameter-profile",
+                  "sha256": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+                  "pointer": "/operations/1/before/parameters/rough_step",
+                  "engineering_status": "unconfirmed"
+                }
+              }
+            },
+            "parameter_changes": [
+              {
+                "parameter_id": "rough_step",
+                "old_value": 0.5,
+                "new_value": 0.4,
+                "unit": "mm",
+                "base_revision": 1,
+                "base_plan_digest": "c55b0df286a65ec6307a104a9c9047d22894e826944a49c2828aca753962d76e",
+                "template_digest": "6dbc61c6e11583db52a5ef60c58305df4032837e9f0f72e212110545ae44e861",
+                "execution_profile_digest": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+                "source": {
+                  "kind": "fixed_mastercam_manifest_extension",
+                  "resource_id": "golden-b7-parameter-profile",
+                  "sha256": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+                  "pointer": "/operations/1/before/parameters/rough_step",
+                  "engineering_status": "unconfirmed"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "ring-op-3",
+          "sequence": 4,
+          "name": "外圆精车",
+          "steps": [
+            {
+              "id": "ring-step-3",
+              "sequence": 1,
+              "content": "外圆精车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-4",
+          "sequence": 5,
+          "name": "内孔粗车",
+          "steps": [
+            {
+              "id": "ring-step-4",
+              "sequence": 1,
+              "content": "内孔粗车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-5",
+          "sequence": 6,
+          "name": "内孔精车",
+          "steps": [
+            {
+              "id": "ring-step-5",
+              "sequence": 1,
+              "content": "内孔精车",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        },
+        {
+          "id": "ring-op-6",
+          "sequence": 7,
+          "name": "切断",
+          "steps": [
+            {
+              "id": "ring-step-6-1",
+              "sequence": 1,
+              "content": "预切至基线 NC X39.5，保留连接料。",
+              "attributes": {}
+            },
+            {
+              "id": "ring-step-6-2",
+              "sequence": 2,
+              "content": "按基线刀路退刀。",
+              "attributes": {}
+            },
+            {
+              "id": "ring-step-6-chamfer",
+              "sequence": 3,
+              "content": "最终切断前，在切断侧外圆边加工 C0.2×45°；其余三条圆周棱边不在本次范围。",
+              "attributes": {}
+            },
+            {
+              "id": "ring-step-6-4",
+              "sequence": 4,
+              "content": "最终切至基线 NC X37.9，分离环件；X 为直径坐标。",
+              "attributes": {}
+            }
+          ],
+          "attributes": {}
+        }
+      ],
+      "extensions": {
+        "execution_profile_digest": "5b01485f4f8fd58b0a8bad504e125d3b76c4b866d3f2a9e3f61177581c1ed323",
+        "parameter_rules": [
+          {
+            "path": "/operations/2/attributes/parameters/rough_step",
+            "value_type": "number",
+            "allowed_values": [0.5, 0.4],
+            "edit_policy": "replace",
+            "operation_id": "ring-op-2",
+            "parameter_id": "rough_step",
+            "unit": "mm"
+          }
+        ],
+        "template": {
+          "id": "golden-b7",
+          "version": "2.3.0",
+          "digest": "6dbc61c6e11583db52a5ef60c58305df4032837e9f0f72e212110545ae44e861"
+        },
+        "reference_only": false,
+        "execution_ready": true,
+        "plan_digest": "cbb3be6a6aa521ecfe6e9bc5b1c4a7ed63ec78947543e618c83b841820f13e8d",
+        "matching_evidence": {
+          "step_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "report_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mcam_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      }
+    },
+    "provider": "template",
+    "event_id": "event-1",
+    "task_id": "task/Golden-中文",
+    "result_id": "result-1",
+    "revision": 2,
+    "run_id": "planning-2",
+    "trace_id": "trace-1",
+    "source_request_id": "source-1",
+    "trigger_request_id": "request-1",
+    "feedback_snapshot": {
+      "feedback_version": 0,
+      "items": []
+    }
+  }
+}

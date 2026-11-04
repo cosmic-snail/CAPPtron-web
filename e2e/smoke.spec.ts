@@ -65,7 +65,7 @@ test('模型输入初始页面与共享 Shell 可见且无溢出', async ({ page
   await expect(
     page.getByRole('heading', { name: 'CNC Agentic Programming', exact: true }),
   ).toBeVisible()
-  await expect(page.getByRole('heading', { name: '模型输入', exact: true })).toBeVisible()
+  await expect(page.getByRole('region', { name: '模型输入', exact: true })).toBeVisible()
   await expect(page.getByRole('region', { name: '输入准备' })).toBeInViewport({ ratio: 1 })
   await expect(page.getByRole('region', { name: '当前模型文件' })).toContainText('尚未选择模型文件')
   await expect(page.getByRole('button', { name: '01 模型输入' })).toHaveAttribute(
@@ -138,7 +138,7 @@ test('使用示例直接进入工艺决策，返回后保留元数据并区分�
   await page.getByRole('button', { name: '使用示例 Ring_A.step' }).click()
   await expect(bar).toContainText('Demo · 示例元数据')
   await expect(bar).not.toContainText('本地选择')
-  await expect(page.getByRole('heading', { name: '工艺决策', exact: true })).toBeVisible()
+  await expect(page.getByRole('region', { name: '工艺决策', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: '02 工艺决策' })).toHaveAttribute(
     'aria-current',
     'step',
@@ -177,7 +177,7 @@ test('未实现入口提供可关闭说明，鼠标和键盘操作均不推进�
     'aria-current',
     'step',
   )
-  await expect(page.getByRole('heading', { name: '模型输入', exact: true })).toBeVisible()
+  await expect(page.getByRole('region', { name: '模型输入', exact: true })).toBeVisible()
 })
 
 test('拖入文件使用相同格式校验并保留有效输入', async ({ page }) => {

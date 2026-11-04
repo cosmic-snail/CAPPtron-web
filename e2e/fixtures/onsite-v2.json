@@ -1,0 +1,293 @@
+{
+  "schema_version": "onsite-record-v2",
+  "task_id": "task/Golden-中文",
+  "part": {
+    "family": "turning.ring",
+    "inner_diameter_mm": 39,
+    "outer_diameter_mm": 41,
+    "thickness_mm": 5
+  },
+  "template": {
+    "digest": "6dbc61c6e11583db52a5ef60c58305df4032837e9f0f72e212110545ae44e861",
+    "id": "golden-b7",
+    "version": "2.3.0"
+  },
+  "baseline_digest": "8ca83c7b0c1fa616d32bc3290956a9cdf3613ff9bd46ef88dbba0ff21dd0f077",
+  "configurations": {
+    "coordinate": [
+      {
+        "operations": [
+          {
+            "mastercam_operation_id": "1",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          },
+          {
+            "mastercam_operation_id": "8",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          },
+          {
+            "mastercam_operation_id": "2",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          },
+          {
+            "mastercam_operation_id": "3",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          },
+          {
+            "mastercam_operation_id": "4",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          },
+          {
+            "mastercam_operation_id": "5",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          },
+          {
+            "mastercam_operation_id": "6",
+            "matrix": [
+              [1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0],
+              [0.0, 0.0, 1.0]
+            ],
+            "origin": [0.0, 0.0, 0.0],
+            "plane_id": 1,
+            "work_offset": -1
+          }
+        ]
+      }
+    ],
+    "fixture": [
+      {
+        "chuck_grip_length": [25.0, 25.0]
+      }
+    ]
+  },
+  "fields": [
+    {
+      "key": ["task/Golden-中文", "task", "stock-od"],
+      "name": "毛坯外径",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": true
+    },
+    {
+      "key": ["task/Golden-中文", "task", "stock-id"],
+      "name": "毛坯预孔直径",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": true
+    },
+    {
+      "key": ["task/Golden-中文", "task", "stock-length"],
+      "name": "毛坯长度",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": true
+    },
+    {
+      "key": ["task/Golden-中文", "task", "work-offset-mode"],
+      "name": "工件零点与偏置",
+      "input_kind": "choice",
+      "unit": null,
+      "required": true,
+      "choices": [
+        {
+          "value": "inherit",
+          "label": "沿用所示配置"
+        },
+        {
+          "value": "change",
+          "label": "需要修改"
+        },
+        {
+          "value": "unknown",
+          "label": "尚未确认"
+        }
+      ],
+      "value": "unknown"
+    },
+    {
+      "key": ["task/Golden-中文", "task", "fixture-mode"],
+      "name": "装夹配置",
+      "input_kind": "choice",
+      "unit": null,
+      "required": true,
+      "choices": [
+        {
+          "value": "inherit",
+          "label": "沿用所示配置"
+        },
+        {
+          "value": "change",
+          "label": "需要修改"
+        },
+        {
+          "value": "unknown",
+          "label": "尚未确认"
+        }
+      ],
+      "value": "unknown"
+    },
+    {
+      "key": ["task/Golden-中文", "task", "origin-x"],
+      "name": "新零点 X",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": false,
+      "when": "work-offset-mode",
+      "minimum": null
+    },
+    {
+      "key": ["task/Golden-中文", "task", "origin-y"],
+      "name": "新零点 Y",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": false,
+      "when": "work-offset-mode",
+      "minimum": null
+    },
+    {
+      "key": ["task/Golden-中文", "task", "origin-z"],
+      "name": "新零点 Z",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": false,
+      "when": "work-offset-mode",
+      "minimum": null
+    },
+    {
+      "key": ["task/Golden-中文", "task", "work-offset-number"],
+      "name": "新工件偏置编号",
+      "input_kind": "number",
+      "unit": null,
+      "required": false,
+      "when": "work-offset-mode",
+      "minimum": null
+    },
+    {
+      "key": ["task/Golden-中文", "task", "fixture-type"],
+      "name": "新夹具类型",
+      "input_kind": "choice",
+      "unit": null,
+      "required": false,
+      "when": "fixture-mode",
+      "choices": [
+        {
+          "value": "three-jaw",
+          "label": "三爪卡盘"
+        },
+        {
+          "value": "collet",
+          "label": "筒夹"
+        },
+        {
+          "value": "other",
+          "label": "其他夹具"
+        }
+      ]
+    },
+    {
+      "key": ["task/Golden-中文", "task", "grip-length"],
+      "name": "夹持长度",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": false,
+      "when": "fixture-mode",
+      "positive": true
+    },
+    {
+      "key": ["task/Golden-中文", "task", "extension-length"],
+      "name": "伸出长度",
+      "input_kind": "number",
+      "unit": "mm",
+      "required": false,
+      "when": "fixture-mode",
+      "positive": true
+    },
+    {
+      "key": ["task/Golden-中文", "task", "note"],
+      "name": "现场备注",
+      "input_kind": "text",
+      "unit": null,
+      "required": false
+    },
+    {
+      "key": ["ring-op-5", "onsite", "bore-surface-ra"],
+      "name": "内孔表面粗糙度要求 Ra",
+      "input_kind": "number",
+      "unit": "μm",
+      "required": true,
+      "positive": true,
+      "reference": null,
+      "requirement_source": "unknown"
+    },
+    {
+      "key": ["ring-op-5", "onsite", "bore-surface-ra-source"],
+      "name": "粗糙度要求来源",
+      "input_kind": "choice",
+      "unit": null,
+      "required": true,
+      "choices": [
+        {
+          "value": "drawing",
+          "label": "图纸 / 技术要求"
+        },
+        {
+          "value": "process",
+          "label": "工艺要求"
+        },
+        {
+          "value": "human",
+          "label": "人工补充"
+        },
+        {
+          "value": "unknown",
+          "label": "来源待核对"
+        }
+      ],
+      "value": "unknown"
+    }
+  ],
+  "digest": "292e06da3c9d454f62074c1ff85a06836505543b7ab0704c660c005861050ee3"
+}

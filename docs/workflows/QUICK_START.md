@@ -1,6 +1,6 @@
 # CAPPtron-web 快速启动指南
 
-适用于 `develop/r06-ui` 开发集成分支，核对日期：2026-10-21。
+适用于 `main`，核对日期：2026-10-27。当前人工确认版本见 [UI 基线](UI-BASELINE.md)。
 
 ## 已有本地工程：直接启动
 
@@ -34,17 +34,23 @@ npm --version
 克隆当前开发版本并启动：
 
 ```bash
-git clone --branch develop/r06-ui https://github.com/James-FE/CAPPtron-web.git
+git clone --branch main https://github.com/James-FE/CAPPtron-web.git
 cd CAPPtron-web
 npm ci
 npm run dev
 ```
 
-`npm ci` 使用提交的锁文件安装依赖，需要能访问 npm 包源。不要对已存在的目录再次执行 clone。`main` 是稳定集成分支，开发功能可能尚未全部同步到 main。
+`npm ci` 使用提交的锁文件安装依赖，需要能访问 npm 包源。不要对已存在的目录再次执行 clone。`main` 是已验收的集成分支。
 
 普通前端 Demo **无需数据库、Python、CAPPtron-core、Mastercam、模型 API 凭据或 `.env` 配置**。`.env.example` 中的地址不是启动前置条件，也不表示后端联调已经完成。
 
-## 启动后可以查看什么
+## 当前基线验收入口
+
+直接打开 `http://127.0.0.1:5173/?mode=simulation`，使用内置 Golden 示例体验完整模拟流程。模拟数据与审核人以本地 JSON 保存，同源刷新可恢复；换端口或清除站点数据不会共享记录。真实联调通过顶部切换，配置见 [Golden 接入说明](../api/Golden-demo-integration-20261025.md)。
+
+本机最终确认使用 `npm run dev -- --host 127.0.0.1 --port 5193 --strictPort`，对应 `http://127.0.0.1:5193/?mode=simulation`；5193 只是本机约定，并非项目默认端口。
+
+## 原型/历史案例入口
 
 1. 在模型输入页选择本地 STEP/STP，或点击“使用示例 Ring_A.step”。本地选择不会上传或解析 CAD。
 2. 示例进入工艺决策，可查看工程参考方案、工序、资源和参数，填写演示现场字段，使用 Agent 演示交互。
@@ -56,7 +62,7 @@ npm run validate:foundation
 npm run example:foundation
 ```
 
-模型文件选择、现场草稿、Agent 对话和程序编辑会话保存在浏览器内存中，刷新页面会重置。Mock 和历史参考不代表真实 Agent、CAM、模型服务或加工验证。
+此处原型演示的模型选择、现场草稿和 Agent 会话主要保存在内存中。真实/模拟流程使用独立恢复日志，NC 本地草稿按任务、版本及文件保存；不要将原型内存行为与当前模拟流程混淆。Mock 和历史参考不代表真实 Agent、CAM、模型服务或加工验证。
 
 ## 获取后续更新
 
@@ -68,11 +74,11 @@ git branch --show-current
 git fetch origin
 ```
 
-如果当前在自己的功能分支，按该分支流程更新，不要直接覆盖或丢弃未提交修改。若只是体验集成版、工作区已妥善保存且可切换到 `develop/r06-ui`：
+如果当前在自己的功能分支，按该分支流程更新，不要直接覆盖或丢弃未提交修改。若只是体验集成版、工作区已妥善保存且可切换到 `main`：
 
 ```bash
-git switch develop/r06-ui
-git pull --ff-only origin develop/r06-ui
+git switch main
+git pull --ff-only origin main
 ```
 
 快进失败时先检查本地提交，勿用强制 reset 绕过。如果依赖文件有变化，停止开发服务后执行 `npm ci`，再运行 `npm run dev`。

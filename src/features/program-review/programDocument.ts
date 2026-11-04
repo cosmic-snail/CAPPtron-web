@@ -1,3 +1,4 @@
+import { randomId } from '../../api/browserCrypto'
 import type { ProgramContent } from '../../api/program-content/reader'
 import { encodeProgram } from '../../api/program-content/format'
 
@@ -29,7 +30,7 @@ export function createProgramDocument(
   return {
     ...identity,
     ...content,
-    id: crypto.randomUUID(),
+    id: randomId(),
     originalText: content.text,
     draftText: content.text,
     savedDraftText: content.text,

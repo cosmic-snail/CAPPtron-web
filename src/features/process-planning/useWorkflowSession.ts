@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { randomId } from '../../api/browserCrypto'
 import { loadDemoPlan } from '../../api/mock/processPlans'
 import type { DemoPlanId } from '../../api/mock/processPlans'
 import { caseCatalogReader, caseChoiceKey } from '../../api/case-catalog'
@@ -44,7 +45,7 @@ export function useWorkflowSession(
   active: boolean,
   initialCaseReference?: { caseId: string; version: string },
 ) {
-  const [taskScope] = useState(() => crypto.randomUUID())
+  const [taskScope] = useState(() => randomId())
   const [demoChoice, setDemoChoice] = useState(
     initialCaseReference
       ? caseChoiceKey(initialCaseReference.caseId, initialCaseReference.version)

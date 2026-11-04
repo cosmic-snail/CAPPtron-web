@@ -1,5 +1,12 @@
 // 前端展示契约；不代表后端已提供这些字段或完成制造校核。
 export type Parameter = {
+  choices?: { value: string; label: string }[]
+  when?: string
+  minimum?: number
+  maximum?: number
+  positive?: boolean
+  serverError?: string
+  allowedValues?: number[]
   id: string
   name: string
   value: string | number | null
@@ -9,7 +16,7 @@ export type Parameter = {
   editable: boolean
   required?: boolean
   description?: string
-  inputKind: 'number' | 'text'
+  inputKind: 'number' | 'text' | 'choice'
 }
 
 export type ProductionResource = {
@@ -34,6 +41,7 @@ export type ProcessOperation = {
   name: string
   source: string
   setup?: string
+  setupId?: string
   notes?: string
   steps: ProcessStep[]
   parameters: Parameter[]
@@ -41,13 +49,46 @@ export type ProcessOperation = {
   onsiteMeasurements: Parameter[]
 }
 
+export type OnsiteContract = {
+  schema_version: 'onsite-record-v2'
+  digest: string
+  task_id: string
+  part: { outer_diameter_mm: number; inner_diameter_mm: number; thickness_mm: number }
+  configurations: Record<string, unknown[]>
+  fields: {
+    key: [string, string, string]
+    name: string
+    input_kind: Parameter['inputKind']
+    unit?: string | null
+    required: boolean
+    choices?: { value: string; label: string }[]
+    when?: string
+    positive?: boolean
+    value?: string
+    reference?: number | null
+  }[]
+}
+export type OnsiteAssessment = {
+  engineering_issues?: { key: string[]; code: string; message: string }[]
+  input_status: 'valid' | 'invalid'
+  planning_status: string
+  execution_status: 'compatible' | 'blocked'
+  issues: { key: string[]; code: string; message: string }[]
+  execution_blockers: { key: string[]; code: string; message: string }[]
+}
 export type ProcessPlan = {
+  onsiteContract?: OnsiteContract
+  onsiteAssessment?: OnsiteAssessment
+  simulation?: boolean
+  verifiedGeometry?: { outer_diameter_mm: number; inner_diameter_mm: number; thickness_mm: number }
   caseReference?: { caseId: string; version: string; planId: string; contentDigest: string }
   id: string
   name: string
   partName: string
-  origin: 'mock'
+  origin: 'mock' | 'live'
   sourceDescription: string
+  engineeringStatus?: string
+  parametersFrozen?: boolean
   operations: ProcessOperation[]
   initialOperationId?: string
   taskMeasurements?: Parameter[]
@@ -79,7 +120,11 @@ export function getPlanReadiness(plan: ProcessPlan, drafts: Drafts) {
     return groups.flatMap(({ section, parameters }) =>
       parameters
         .filter((parameter) => {
-          if (!parameter.required) return false
+          const conditional =
+            parameter.when &&
+            (drafts[draftKey(id, section, parameter.when)] ??
+              parameters.find((x) => x.id === parameter.when)?.value) === 'change'
+          if (!parameter.required && !conditional) return false
           const value = drafts[draftKey(id, section, parameter.id)] ?? String(parameter.value ?? '')
           return (
             !value.trim() || (parameter.inputKind === 'number' && !Number.isFinite(Number(value)))
@@ -104,10 +149,19 @@ export function resolveOperation(plan: ProcessPlan, selectedId: string | null) {
 
 export function validateDraft(parameter: Parameter, value: string): string | null {
   if (!parameter.editable) return '此字段不允许本地编辑。'
-  if (!value.trim()) return '尚未填写，仍待补充。'
+  if (!value.trim()) return parameter.required === false ? null : '尚未填写，仍待补充。'
+  if (parameter.choices && !parameter.choices.some((x) => x.value === value))
+    return '请选择有效选项。'
+  if (parameter.positive && Number(value) <= 0) return '必须大于 0。'
+  if (parameter.allowedValues && !parameter.allowedValues.includes(Number(value)))
+    return `仅允许：${parameter.allowedValues.join(' / ')} ${parameter.unit ?? ''}`
   if (parameter.inputKind === 'number' && !Number.isFinite(Number(value))) {
     return '请输入有限数值；单位见字段说明。'
   }
-  // 仅检查输入格式；没有制造契约时，不臆造工艺范围或安全结论。
+  if (parameter.minimum !== undefined && Number(value) < parameter.minimum)
+    return `不能小于 ${parameter.minimum} ${parameter.unit ?? ''}`
+  if (parameter.maximum !== undefined && Number(value) > parameter.maximum)
+    return `不能大于 ${parameter.maximum} ${parameter.unit ?? ''}`
+  // 仅采用服务端特征导出的边界，不代表加工余量和装夹已验证。
   return null
 }

@@ -72,7 +72,7 @@ describe('工艺决策与模型来源', () => {
     expect(screen.getByRole('progressbar')).toHaveAttribute('value', '50')
     expect(screen.getByRole('button', { name: '查看工艺规划结果' })).toBeDisabled()
     await finishPlanning()
-    expect(operations().getAllByRole('button')).toHaveLength(6)
+    expect(operations().getAllByRole('button')).toHaveLength(7)
     expect(screen.getByRole('region', { name: '当前工序详情' })).toHaveTextContent('01 端面车削')
   })
 
@@ -107,7 +107,7 @@ describe('工艺决策与模型来源', () => {
     expect(shared()).toHaveTextContent('待填 5')
     expect(finishBore()).toHaveTextContent('待填 1')
     expect(operations().getByRole('button', { name: /06 切断/ })).not.toHaveTextContent('待填')
-    expect(screen.getByRole('button', { name: '定位待填工序，1 项' })).toBeVisible()
+    expect(screen.getByRole('button', { name: '定位待填信息，6 项' })).toBeVisible()
     expect(operations().getByRole('button', { name: /03 外圆精车/ })).not.toHaveTextContent('待填')
     expect(screen.queryByLabelText('现场毛坯外径')).not.toBeInTheDocument()
     expect(generate()).toBeDisabled()
@@ -142,7 +142,7 @@ describe('工艺决策与模型来源', () => {
     })
     expect(generate()).toBeEnabled()
     expect(finishBore()).not.toHaveTextContent('待填')
-    expect(screen.queryByRole('button', { name: /定位待填工序/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /定位待填信息/ })).not.toBeInTheDocument()
     fireEvent.click(shared())
     for (const value of [' ', 'abc', 'Infinity']) {
       fireEvent.change(screen.getByLabelText('现场毛坯外径'), { target: { value } })

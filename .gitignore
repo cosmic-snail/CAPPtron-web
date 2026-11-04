@@ -16,3 +16,8 @@ playwright/.cache/
 # 私有程序正文不得进入公开仓库；测试使用明确的合成文本。
 *.nc
 *.NC
+
+# 每个部署独立发布受控Golden配置；测试配置不得意外上线。
+public/core-deployment.json
+
+public/frontend-integration.v1.json

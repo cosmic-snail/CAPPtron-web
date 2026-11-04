@@ -78,7 +78,7 @@ test('固定快照大屏、键盘图表、资源分页搜索详情与焦点恢�
   await screenshot(page, info, 'foundation-knowledge-detail')
   await page.getByRole('button', { name: '关闭资源目录' }).click()
   await page.getByRole('button', { name: '返回智能工艺工作台' }).click()
-  await expect(page.getByRole('heading', { name: '模型输入', exact: true })).toBeVisible()
+  await expect(page.getByRole('region', { name: '模型输入', exact: true })).toBeVisible()
   expect(errors).toEqual([])
   expect(external).toEqual([])
 })

@@ -24,7 +24,7 @@ function ParameterField({
   onChange: (value: string) => void
 }) {
   const id = useId()
-  const error = value !== undefined ? validateDraft(parameter, value) : null
+  const error = value !== undefined ? validateDraft(parameter, value) : parameter.serverError
   return (
     <div className="parameter-field">
       <label htmlFor={parameter.editable ? id : undefined}>
@@ -37,7 +37,24 @@ function ParameterField({
         )}
       </label>
       <div className="parameter-value">
-        {parameter.editable ? (
+        {parameter.editable && parameter.inputKind === 'choice' ? (
+          <select
+            id={id}
+            aria-label={parameter.name}
+            value={value ?? String(parameter.value ?? '')}
+            onChange={(event) => onChange(event.target.value)}
+            aria-describedby={`${id}-help`}
+            aria-invalid={!!error}
+            aria-required={parameter.required || undefined}
+          >
+            <option value="">请选择</option>
+            {parameter.choices?.map((choice) => (
+              <option key={choice.value} value={choice.value}>
+                {choice.label}
+              </option>
+            ))}
+          </select>
+        ) : parameter.editable ? (
           <input
             id={id}
             aria-label={parameter.name}
@@ -56,20 +73,23 @@ function ParameterField({
         )}
         {parameter.unit && <span>{parameter.unit}</span>}
       </div>
-      <p
+      <div
         id={`${id}-help`}
-        className={error || parameter.value === null ? 'warning-text' : 'muted-text'}
+        className={`parameter-help ${error || parameter.value === null ? 'warning-text' : 'muted-text'}`}
       >
         {value !== undefined
           ? (error ?? '本地草稿 · 格式有效，未校核')
           : `${sources[parameter.source]} · ${parameter.status === 'missing' ? '待补充' : parameter.status === 'pending' ? '待确认' : '已提供，未校核'}`}
-        {parameter.description && (
-          <>
-            <br />
-            {parameter.description}
-          </>
-        )}
-      </p>
+        {parameter.description &&
+          (parameter.source === 'upstream' ? (
+            <details className="parameter-source-details">
+              <summary>来源详情</summary>
+              <p>{parameter.description}</p>
+            </details>
+          ) : (
+            <p>{parameter.description}</p>
+          ))}
+      </div>
     </div>
   )
 }
@@ -92,17 +112,24 @@ export function ParameterFields({
   if (!parameters.length) return <p className="muted-text">{emptyText}</p>
   return (
     <div className="parameter-fields">
-      {parameters.map((parameter) => {
-        const key = draftKey(operationId, section, parameter.id)
-        return (
-          <ParameterField
-            key={parameter.id}
-            parameter={parameter}
-            value={drafts[key]}
-            onChange={(value) => onDraft(key, value)}
-          />
+      {parameters
+        .filter(
+          (p) =>
+            !p.when ||
+            (drafts[draftKey(operationId, section, p.when)] ??
+              parameters.find((x) => x.id === p.when)?.value) === 'change',
         )
-      })}
+        .map((parameter) => {
+          const key = draftKey(operationId, section, parameter.id)
+          return (
+            <ParameterField
+              key={parameter.id}
+              parameter={parameter.when ? { ...parameter, required: true } : parameter}
+              value={drafts[key]}
+              onChange={(value) => onDraft(key, value)}
+            />
+          )
+        })}
     </div>
   )
 }

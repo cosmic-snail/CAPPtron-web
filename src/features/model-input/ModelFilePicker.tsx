@@ -4,6 +4,8 @@ import { formatFileSize, selectionName } from './modelInput'
 import type { ModelSelection } from './modelInput'
 
 type ModelFilePickerProps = {
+  simulation?: boolean
+  liveStatus?: string
   selection: ModelSelection
   error: string
   onChoose: () => void
@@ -17,6 +19,8 @@ export function ModelFilePicker({
   onChoose,
   onFiles,
   onDemo,
+  liveStatus,
+  simulation,
 }: ModelFilePickerProps) {
   const [dragging, setDragging] = useState(false)
   const name = selectionName(selection)
@@ -63,12 +67,12 @@ export function ModelFilePicker({
           <span className="file-picker-description" id="file-picker-help">
             {selection.kind === 'empty' && '选择或拖入 STEP / STP · 仅本地选择'}
             {selection.kind === 'local' &&
-              `${selection.extension} · ${formatFileSize(selection.file.size)} · 尚未上传或解析`}
+              `${selection.extension} · ${formatFileSize(selection.file.size)} · ${liveStatus ?? '尚未上传或解析'}`}
             {selection.kind === 'demo' && 'Demo · 示例元数据，未读取真实模型'}
           </span>
         </button>
         <button className="button demo-button" type="button" onClick={onDemo}>
-          使用示例 Ring_A.step
+          {simulation ? '使用示例 Golden-simulation.step' : '使用示例 Ring_A.step'}
         </button>
       </div>
       {error && (
